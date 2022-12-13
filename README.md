@@ -1,2 +1,2 @@
 # toilkit
-A set of python functions for working with inputs and outputs to and from the toil-rnaseq pipeline
+A set of python functions for working with inputs to and outputs from the toil-rnaseq pipeline
