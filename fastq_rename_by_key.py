@@ -1,16 +1,24 @@
 import glob
 import os
-import sys
+import argparse
 
 # TODO: upgrade to argparser
-#e.g. usage: python fastq_rename_by_key.py /media/graeberlab/My\ Book/RNA\ Batch\ 14/ "*.fastq.gz" RNA14\ Index\ simple.txt
-direc = sys.argv[1]
-pattern = sys.argv[2]
-keyname = sys.argv[3]
+  #e.g. usage: python fastq_rename_by_key.py /media/graeberlab/My\ Book/RNA\ Batch\ 14/ "*.fastq.gz" RNA14\ Index\ simple.txt
+  #For argparse: python fastq_rename_by_key.py /path/to/directory "*.fastq.gz" keyfile.txt
+  #With argparse, this can be done in any order, just need --keyname or --pattern before the first argument
+parser = argparse.ArgumentParser()
+parser.add_argument('directory', help='The directory containing the files to rename')
+parser.add_argument('pattern', help='The filename pattern to match')
+parser.add_argument('keyname', help='The file name key to match')
 
-print "Directory: " + direc
-print "Filename pattern: " + pattern
-print "Filename key: " + keyname
+args = parser.parse_args()
+direc = args.directory
+pattern = args.pattern
+keyname = args.keyname
+
+print("Directory: " + direc)
+print("Filename pattern: " + pattern)
+print("Filename key: " + keyname)
 
 os.chdir(direc)
 
@@ -28,7 +36,7 @@ with open(keyname) as f:
     key, val = [l.rstrip() for l in line.split('\t')]
     # add tuple variables to dict
     d[key] = val
-print d
+print(d)
 # split the filenames by "_" and save as list
 #filesnames is a list of all the original full file names
 ids = [filename.split("_")[0] for filename in filenames]
