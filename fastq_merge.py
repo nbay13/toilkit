@@ -41,9 +41,9 @@ for name in unique_names:
     print(name)
 
     # Find all files that match the pattern ${name}_.*R1 and sort them
-    r1_files = sorted(glob.glob(f'{args.indir}/{name}_*R1'))
+    r1_files = sorted(glob.glob(f'{args.indir}/{name}{args.split_char}*R1'))
     # Find all files that match the pattern ${name}_.*R2 and sort them
-    r2_files = sorted(glob.glob(f'{args.indir}/{name}_*R2'))
+    r2_files = sorted(glob.glob(f'{args.indir}/{name}{args.split_char}*R2'))
 
     # Create a list of tuples that pairs each R1 file with its corresponding R2 file
     file_pairs = list(zip(r1_files, r2_files))
