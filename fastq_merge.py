@@ -53,10 +53,10 @@ for name in unique_names:
     # Loop through each file pair
     for r1_file, r2_file in file_pairs:
         # Open the output files for writing
-        with gzip.open(f'{args.outdir}/{name}_R1.fastq.gz', 'w') as output_file_r1:
-            with gzip.open(f'{args.outdir}/{name}_R2.fastq.gz', 'w') as output_file_r2:
+        with gzip.open(f'{args.outdir}/{name}_R1.fastq.gz', 'wt') as output_file_r1:
+            with gzip.open(f'{args.outdir}/{name}_R2.fastq.gz', 'wt') as output_file_r2:
                 # Iterate through the records in the input files, using SeqIO.parse
-                for r1_record, r2_record in zip(SeqIO.parse(r1_file, "fastq"), SeqIO.parse(r2_file, "fastq")):
+                for r1_record, r2_record in zip(SeqIO.parse(gzip.open(r1_file, "rt"), "fastq"), SeqIO.parse(gzip.open(r2_file, "rt"), "fastq")):
                     # Write the records to the output files, using SeqIO.write
                     SeqIO.write(r1_record, output_file_r1, "fastq")
                     SeqIO.write(r2_record, output_file_r2, "fastq")
