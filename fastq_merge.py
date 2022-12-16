@@ -1,7 +1,9 @@
 # Import necessary modules
+from Bio import SeqIO
 import argparse
 import os
 import glob
+import gzip
 
 def parse():
   # Create an argument parser object
@@ -41,21 +43,21 @@ for name in unique_names:
     print(name)
 
     # Find all files that match the pattern ${name}_.*R1 and sort them
-    r1_files = sorted(glob.glob(f'{args.indir}/{name}{args.split_char}*R1'))
+    r1_files = sorted(glob.glob(f'{args.indir}/{name}{args.split_char}*R1*'))
     # Find all files that match the pattern ${name}_.*R2 and sort them
-    r2_files = sorted(glob.glob(f'{args.indir}/{name}{args.split_char}*R2'))
+    r2_files = sorted(glob.glob(f'{args.indir}/{name}{args.split_char}*R2*'))
 
     # Create a list of tuples that pairs each R1 file with its corresponding R2 file
     file_pairs = list(zip(r1_files, r2_files))
 
     # Loop through each file pair
     for r1_file, r2_file in file_pairs:
-        # Concatenate the files and write the output to ${name}_R1.fastq.gz in outdir
-        with open(f'{args.outdir}/{name}_R1.fastq.gz', 'w') as output_file:
-            with open(r1_file, 'r') as input_file:
-                output_file.write(input_file.read())
+        # Open the output files for writing
+        with gzip.open(f'{args.outdir}/{name}_R1.fastq.gz', 'w') as output_file_r1:
+            with gzip.open(f'{args.outdir}/{name}_R2.fastq.gz', 'w') as output_file_r2:
+                # Iterate through the records in the input files, using SeqIO.parse
+                for r1_record, r2_record in zip(SeqIO.parse(r1_file, "fastq"), SeqIO.parse(r2_file, "fastq")):
+                    # Write the records to the output files, using SeqIO.write
+                    SeqIO.write(r1_record, output_file_r1, "fastq")
+                    SeqIO.write(r2_record, output_file_r2, "fastq")
 
-        # Concatenate the files and write the output to ${name}_R2.fastq.gz in outdir
-        with open(f'{args.outdir}/{name}_R2.fastq.gz', 'w') as output_file:
-            with open(r2_file, 'r') as input_file:
-                output_file.write(input_file.read())
