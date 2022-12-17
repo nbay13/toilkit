@@ -73,7 +73,7 @@ def subprocess_merge(unique_names):
         subprocess.run(shlex.split(command_r1), check=True)
 
         # Find and concatenate the files and write the output to ${cur_base}_R2.fastq.gz in outdir
-        command_r2 = f'find . -type f -print | grep ${cur_base}{args.split_char}*R1* | sort | xargs cat {args.outdir}/{cur_base}{args.split_char}*R2* | gzip > {args.outdir}/{cur_base}_R2.fastq.gz'
+        command_r2 = f'find . -type f -print | grep ${cur_base}{args.split_char}*R2* | sort | xargs cat {args.outdir}/{cur_base}{args.split_char}*R2* | gzip > {args.outdir}/{cur_base}_R2.fastq.gz'
         subprocess.run(shlex.split(command_r2), check=True)
 
 
