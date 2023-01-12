@@ -5,7 +5,6 @@ import os
 import glob
 import gzip
 import subprocess
-import shlex
 
 
 # Uses SeqIO Parse to write R1 and R2 inputs to merged file
@@ -68,12 +67,12 @@ def subprocess_merge(names):
     for cur_base in names:
         print(cur_base)
         # Find and concatenate the files and write the output to ${cur_base}_R1.fastq.gz in outdir
-        command_r1 = f'find . -type f -print | grep ${cur_base}{args.split_char}*R1* | sort | xargs cat > {args.outdir}/{cur_base}_R1.fastq.gz'
-        subprocess.run(shlex.split(command_r1), check=True)
 
-        # Find and concatenate the files and write the output to ${cur_base}_R2.fastq.gz in outdir
-        command_r2 = f'find . -type f -print | grep ${cur_base}{args.split_char}*R2* | sort | xargs cat > {args.outdir}/{cur_base}_R2.fastq.gz'
-        subprocess.run(shlex.split(command_r2), check=True)
+        command_r1 = f'find {args.indir} -type f -name "{cur_base}{args.split_char}*R1*" -exec cat {{}} + > {args.outdir}/{cur_base}_R1.fastq.gz'
+        subprocess.run(command_r1, shell=True)
+
+        command_r2 = f'find {args.indir} -type f -name "{cur_base}{args.split_char}*R2*" -exec cat {{}} + > {args.outdir}/{cur_base}_R2.fastq.gz'
+        subprocess.run(command_r2, shell=True)
 
 
 # Parses user input in the form of python fastq_merge.py --indir --split_char --outdir -- write_method
@@ -96,7 +95,6 @@ args = parse_merge_args()
 
 # Create a list of all .gz files in the input directory
 files = glob.glob(f'{args.indir}/*.gz')
-
 # Create a list of all file base names
 sample_names = []
 for file in files:
@@ -105,9 +103,9 @@ for file in files:
     # Append the base name to the names list
     sample_names.append(basename)
 
-# Create a set of unique base names from the names list
-unique_names = set(sample_names)
 
+# Create a set of unique base names from the names list
+unique_names = sorted(set(sample_names))
 # Create the output directory, if it doesn't exist
 if not os.path.exists(args.outdir):
     os.mkdir(args.outdir)
