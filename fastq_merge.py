@@ -19,9 +19,10 @@ def seqIO_parse_merge(names):
         file_pairs = list(zip(r1_files, r2_files))
         # Loop through each file pair
         for r1_file, r2_file in file_pairs:
+            print(r1_file, r2_file)
             # Open the output files for writing
-            with gzip.open(f'{args.outdir}/{name}_R1.fastq.gz', 'wt') as output_file_r1:
-                with gzip.open(f'{args.outdir}/{name}_R2.fastq.gz', 'wt') as output_file_r2:
+            with gzip.open(f'{args.outdir}/{name}_R1.fastq.gz', 'at') as output_file_r1:
+                with gzip.open(f'{args.outdir}/{name}_R2.fastq.gz', 'at') as output_file_r2:
                     # Iterate through the records in the input files, using SeqIO.parse
                     for r1_record, r2_record in zip(SeqIO.parse(gzip.open(r1_file, "rt"), "fastq"),
                                                     SeqIO.parse(gzip.open(r2_file, "rt"), "fastq")):
