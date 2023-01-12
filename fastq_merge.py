@@ -68,10 +68,12 @@ def subprocess_merge(names):
         print(cur_base)
         # Find and concatenate the files and write the output to ${cur_base}_R1.fastq.gz in outdir
 
-        command_r1 = f'find {args.indir} -type f -name "{cur_base}{args.split_char}*R1*" -exec cat {{}} + > {args.outdir}/{cur_base}_R1.fastq.gz'
+        command_r1 = f'find {args.indir} -type f -name "{cur_base}{args.split_char}*R1*" | sort | xargs cat > ' \
+                     f'{args.outdir}/{cur_base}_R1.fastq.gz'
         subprocess.run(command_r1, shell=True)
 
-        command_r2 = f'find {args.indir} -type f -name "{cur_base}{args.split_char}*R2*" -exec cat {{}} + > {args.outdir}/{cur_base}_R2.fastq.gz'
+        command_r2 = f'find {args.indir} -type f -name "{cur_base}{args.split_char}*R2*" | sort | xargs cat >' \
+                     f' {args.outdir}/{cur_base}_R2.fastq.gz'
         subprocess.run(command_r2, shell=True)
 
 
