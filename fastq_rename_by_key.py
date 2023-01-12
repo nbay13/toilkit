@@ -21,7 +21,6 @@ print("Filename pattern: " + pattern)
 print("Filename key: " + keyname)
 
 os.chdir(direc)
-
 filenames = [f for f in glob.glob(pattern)]
 # initalize a dictionary
 d = {}
