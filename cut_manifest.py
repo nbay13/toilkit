@@ -6,7 +6,7 @@ def split_file(manifest_file, split_num):
         lines = f.readlines()
 
     num_files = len(lines)
-    for i in range(num_files):
+    for i in range(num_files//split_num+1):
         ext = os.path.splitext(manifest_file)[1]
         base = os.path.splitext(manifest_file)[0]
         with open(f"{base}-{i+1}{ext}", 'w') as f:
