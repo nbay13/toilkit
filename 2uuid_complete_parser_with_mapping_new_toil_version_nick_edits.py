@@ -37,6 +37,9 @@ def test_file_range(filename,index):
 gene_list =[]
 duplicate_genes =[]
 gene_list_renamed =[]
+'''
+todo: make check outside loop, consider changing value renaming but keep for now
+'''
 for i in range(min_id,min_id+2):	###
     file_name = "UUID_"+ str(i) + ".tar.gz"
     if i == 0 and test_file_range(file_name,i) == False:
