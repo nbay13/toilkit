@@ -192,6 +192,9 @@ isoforms.to_csv(prefix + "_" + "rsem_transcripts_hugo_raw_counts.txt",sep='\t',i
 ################
 #raw transcripts
 ################
+
+#infile: /RSEM/rsem_isoforms.results
+#out:
 output_to_write =defaultdict(list)
 headings_list = ["gene"]
 
@@ -272,6 +275,8 @@ isoforms.to_csv(prefix + "_" + "rsem_transcripts_raw_counts.txt",sep='\t',index=
 ##########
 #tpm genes
 ##########
+#in /RSEM/Hugo/rsem_genes.hugo.results
+#out rsem_genes_tpm_counts.txt
 
 output_to_write =defaultdict(list)
 headings_list = ["gene"]
@@ -318,7 +323,7 @@ for i in range(min_id,99999999):	###
         for name, line in zip(gene_list_renamed,content):
             new_line = bytes.decode(line)
             newer_line = new_line.rstrip("\n").split("\t")
-            output_to_write[name].append(newer_line[5])   #this is where you change it to 4
+            output_to_write[name].append(newer_line[5])   #this is where you change it to 5
     print("Completed "+ str(i) + " file(s).")
 
 sorted_output_to_write = sorted(output_to_write.items())
