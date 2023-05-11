@@ -2,6 +2,13 @@ import argparse
 from commands.fastq_merge import parse_merge_args
 from commands.fastq_rename_by_key import rename_by_key
 from commands.batch_bbduk_bbseal import bbduk_bbseal
+from commands.cat_bbseal_output import cat_bbseal
+from commands.make_manifest import make_manifest
+from commands.manifest_2_anno_v2 import manifest_to_anno
+from commands.cut_manifest import cut_manifest
+from commands.gather_bbseal_metrics import gather_bbseal_metrics
+from commands.collate_qc_and_star_junctions import collate_qc_and_star_junctions, write_star, prepare_read_fastqc
+
 
 def main():
     parser = argparse.ArgumentParser(prog='toilkit')
@@ -27,6 +34,51 @@ def main():
     parser_bbduk_bbseal.add_argument('bbdukdir', help='The directory containing bbduk.sh')
     parser_bbduk_bbseal.add_argument('bbsealdir', help='The directory containing bbseal.sh')
     parser_bbduk_bbseal.set_defaults(func=bbduk_bbseal)
+
+    # Add subcommand for cat_bbseal
+    parser_cat_bbseal = subparsers.add_parser('cat_bbseal')
+    parser_cat_bbseal.add_argument('dir', help='The directory containing bbseal results')
+    parser_cat_bbseal.set_defaults(func=cat_bbseal)
+
+    # Add subcommand for make_manifest
+    parser_make_manifest = subparsers.add_parser('make_manifest')
+    parser_make_manifest.add_argument('dir', help="The working directory")
+    parser_make_manifest.add_argument('tdir', help="The target directory of the fastqs")
+    parser_make_manifest.add_argument('suffix', default='.tsv', help="The suffix of the manifest file (ex. nathanson-15-1.tsv)")
+    parser_make_manifest.add_argument('starting_num', default=0, type=int,
+                        help="a number for each pair of fastq files listed in the manifest file")
+    parser_make_manifest.set_defaults(func=make_manifest)
+
+    # Add subcommand for manifest_to_anno
+    parser_manifest_to_anno = subparsers.add_parser('manifest_to_anno')
+    parser_manifest_to_anno.add_argument('infile', help='The input manifest file')
+    parser_manifest_to_anno.add_argument('outfile', help='The output annotation file')
+    parser_manifest_to_anno.set_defaults(func=manifest_to_anno)
+
+    # Add subcommand for cut_manifest
+    parser_cut_manifest = subparsers.add_parser('cut_manifest')
+    parser_cut_manifest.add_argument('manifest_file', help='Manifest File to split')
+    parser_cut_manifest.add_argument('split_num', type=int, help='Number of lines per split file')
+    parser_cut_manifest.set_defaults(func=cut_manifest)
+
+    parser_gather_bbseal_metrics = subparsers.add_parser('gather_bbseal_metrics')
+    parser_gather_bbseal_metrics.add_argument('direc', help='The directory of the bbseal results',
+                        default=' /media/graeberlab/My\ Book/RNA\ Batch\ 14/')
+    parser_gather_bbseal_metrics.add_argument('out_name', help='The prefix of the output file', default='Nathanson-batch-14')
+    parser_gather_bbseal_metrics.set_defaults(gather_bbseal_metrics)
+
+    parser_collate_qc_and_star_junctions = subparsers.add_parser('collate_qc_and_star_junctions')
+    parser_collate_qc_and_star_junctions.add_argument('prefix', help='The annotation file name prefix',
+                                                      default='Nathanson_batch16')
+    parser_collate_qc_and_star_junctions.add_argument('anno_filename', help='The annotation file',
+                                                      default='annotation.tmp.txt')
+    parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
+    parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
+    parser_collate_qc_and_star_junctions.add_argument('input_dir', help='The input path of annotation data', default='')
+    parser_collate_qc_and_star_junctions.add_argument('star_output',
+                                                      help='The output path of where to put the star junctions data',
+                                                      default='junctions/')
+    parser_collate_qc_and_star_junctions.set_defaults(bamqc=True, func = collate_qc_and_star_junctions)
 
     args = parser.parse_args()
     args.func(args)
