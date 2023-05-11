@@ -3,14 +3,20 @@ import sys
 import pandas as pd
 import csv
 import numpy as np
+import argparse
 
-# TODO: upgrade to argparser
 #e.g. usage: python gather_bbseal_metrics.py /media/graeberlab/My\ Book/RNA\ Batch\ 14/ Nathanson-batch-14
-direc = sys.argv[1]
-out_name = sys.argv[2]
 
-print "Directory: " + direc
-print "Output filename: " + out_name + "_BBSeal_mouse_read_filtering_results.tsv"
+parser = argparse.ArgumentParser()
+parser.add_argument('direc', help='The directory of the bbseal results', default = ' /media/graeberlab/My\ Book/RNA\ Batch\ 14/')
+parser.add_argument('out_name', help='The prefix of the output file', default = 'Nathanson-batch-14')
+
+args = parser.parse_args()
+direc = args.direc
+out_name = args.out_name
+
+print("Directory: " + direc)
+print("Output filename: " + out_name + "_BBSeal_mouse_read_filtering_results.tsv")
 
 os.chdir(direc)
 

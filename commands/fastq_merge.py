@@ -6,9 +6,9 @@ import glob
 import gzip
 import subprocess
 
-
+    # Parses user input in the form of python fastq_merge.py --indir --split_char --outdir -- write_method
 # Uses SeqIO Parse to write R1 and R2 inputs to merged file
-def seqIO_parse_merge(names):
+def seqIO_parse_merge(names,args):
     for name in names:
         print(name)
         # Find all files that match the pattern ${name}_.*R1 and sort them
@@ -32,7 +32,7 @@ def seqIO_parse_merge(names):
 
 
 # Uses SeqIO Index to write R1 and R2 inputs to merged file
-def seqIO_index_merge(names):
+def seqIO_index_merge(names, args):
     for name in names:
         print(name)
         # Find all files that match the pattern ${name}_.*R1 and sort them
@@ -64,7 +64,7 @@ def seqIO_index_merge(names):
 
 
 # Uses Subprocess with cat command to write R1 and R2 inputs to merged file
-def subprocess_merge(names):
+def subprocess_merge(names, args):
     for cur_base in names:
         print(cur_base)
         # Find and concatenate the files and write the output to ${cur_base}_R1.fastq.gz in outdir
@@ -78,44 +78,27 @@ def subprocess_merge(names):
         subprocess.run(command_r2, shell=True)
 
 
-# Parses user input in the form of python fastq_merge.py --indir --split_char --outdir -- write_method
-def parse_merge_args():
-    # Create an argument parser object
-    parser = argparse.ArgumentParser()
+# Parses user input in the form of python fastq_merge.py indir split_char outdir write_method
+def parse_merge_args(args):
+    # Create a list of all .gz files in the input directory
+    files = glob.glob(f'{args.indir}/*.gz')
+    # Create a list of all file base names
+    sample_names = []
+    for file in files:
+        # Extract the base name of the file, using os.path.basename
+        basename = os.path.basename(file).split(args.split_char)[0]
+        # Append the base name to the names list
+        sample_names.append(basename)
 
-    # Add arguments to the parser
-    parser.add_argument('--indir', required=True, help='Directory containing .gz files')
-    parser.add_argument('--split_char', default='_', help='Character to split file names')
-    parser.add_argument('--outdir', default='.', help='Output directory')
-    parser.add_argument('--write_method', default='s',
-                        help='The method of merging (SeqIO Parse (p), SeqIO Index (i), or Shell Script (s)')
-    # Parse the command-line arguments
-    return parser.parse_args()
-
-
-# Get user's args
-args = parse_merge_args()
-
-# Create a list of all .gz files in the input directory
-files = glob.glob(f'{args.indir}/*.gz')
-# Create a list of all file base names
-sample_names = []
-for file in files:
-    # Extract the base name of the file, using os.path.basename
-    basename = os.path.basename(file).split(args.split_char)[0]
-    # Append the base name to the names list
-    sample_names.append(basename)
-
-
-# Create a set of unique base names from the names list
-unique_names = sorted(set(sample_names))
-# Create the output directory, if it doesn't exist
-if not os.path.exists(args.outdir):
-    os.mkdir(args.outdir)
-# does the specified write method
-if args.write_method == 's':
-    subprocess_merge(unique_names)
-elif args.write_method == 'p':
-    seqIO_parse_merge(unique_names)
-elif args.write_method == 'i':
-    seqIO_index_merge(unique_names)
+    # Create a set of unique base names from the names list
+    unique_names = sorted(set(sample_names))
+    # Create the output directory, if it doesn't exist
+    if not os.path.exists(args.outdir):
+        os.mkdir(args.outdir)
+    # does the specified write method
+    if args.write_method == 's':
+        subprocess_merge(unique_names, args)
+    elif args.write_method == 'p':
+        seqIO_parse_merge(unique_names, args)
+    elif args.write_method == 'i':
+        seqIO_index_merge(unique_names, args)

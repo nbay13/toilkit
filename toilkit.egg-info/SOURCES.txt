@@ -1,0 +1,8 @@
+README.md
+setup.py
+toilkit.egg-info/PKG-INFO
+toilkit.egg-info/SOURCES.txt
+toilkit.egg-info/dependency_links.txt
+toilkit.egg-info/entry_points.txt
+toilkit.egg-info/requires.txt
+toilkit.egg-info/top_level.txt
