@@ -8,7 +8,8 @@ from commands.manifest_2_anno_v2 import manifest_to_anno
 from commands.cut_manifest import cut_manifest
 from commands.gather_bbseal_metrics import gather_bbseal_metrics
 from commands.collate_qc_and_star_junctions import collate_qc_and_star_junctions, write_star, prepare_read_fastqc
-
+from commands.rename_toil_output import rename_toil_output
+from commands.batch_rename_TOIL_FAIL import batch_rename_TOIL_FAIL
 
 def main():
     parser = argparse.ArgumentParser(prog='toilkit')
@@ -61,12 +62,14 @@ def main():
     parser_cut_manifest.add_argument('split_num', type=int, help='Number of lines per split file')
     parser_cut_manifest.set_defaults(func=cut_manifest)
 
+    # Add subcommand for gather_bbseal_metrics
     parser_gather_bbseal_metrics = subparsers.add_parser('gather_bbseal_metrics')
     parser_gather_bbseal_metrics.add_argument('direc', help='The directory of the bbseal results',
                         default=' /media/graeberlab/My\ Book/RNA\ Batch\ 14/')
     parser_gather_bbseal_metrics.add_argument('out_name', help='The prefix of the output file', default='Nathanson-batch-14')
-    parser_gather_bbseal_metrics.set_defaults(gather_bbseal_metrics)
+    parser_gather_bbseal_metrics.set_defaults(func=gather_bbseal_metrics)
 
+    # Add subcommand for collate_qc_and_star_junctions
     parser_collate_qc_and_star_junctions = subparsers.add_parser('collate_qc_and_star_junctions')
     parser_collate_qc_and_star_junctions.add_argument('prefix', help='The annotation file name prefix',
                                                       default='Nathanson_batch16')
@@ -79,6 +82,18 @@ def main():
                                                       help='The output path of where to put the star junctions data',
                                                       default='junctions/')
     parser_collate_qc_and_star_junctions.set_defaults(bamqc=True, func = collate_qc_and_star_junctions)
+
+    # Add subcommand for rename_toil_output
+    parser_rename_toil_output = subparsers.add_parser('rename_toil_output')
+    parser_rename_toil_output.add_argument('input_file', type=str, help='Path to the input file')
+    parser_rename_toil_output.add_argument('direction', type=str, help='Direction of renaming (1 or 2)')
+    parser_rename_toil_output.set_defaults(func=rename_toil_output)
+
+    #Add subcommand for batch_rename_TOIL_FAIL
+    parser_batch_rename_TOIL_FAIL = subparsers.add_parser('batch_rename_TOIL_FAIL')
+    parser_batch_rename_TOIL_FAIL.add_argument('dir', help='The directory containing the files to rename')
+    parser_batch_rename_TOIL_FAIL.set_defaults(func=batch_rename_TOIL_FAIL)
+
 
     args = parser.parse_args()
     args.func(args)
