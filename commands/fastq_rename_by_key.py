@@ -9,7 +9,7 @@ import argparse
 
 
 def rename_by_key(args):
-  direc = args.directory
+  direc = args.dir
   pattern = args.pattern
   keyname = args.keyname
 
