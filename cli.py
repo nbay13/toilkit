@@ -75,8 +75,8 @@ def main():
                                                       default='Nathanson_batch16')
     parser_collate_qc_and_star_junctions.add_argument('anno_filename', help='The annotation file',
                                                       default='annotation.tmp.txt')
-    parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
-    parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
+    #parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
+    #parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
     parser_collate_qc_and_star_junctions.add_argument('input_dir', help='The input path of annotation data', default='')
     parser_collate_qc_and_star_junctions.add_argument('star_output',
                                                       help='The output path of where to put the star junctions data',
