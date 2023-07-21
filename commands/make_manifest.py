@@ -10,6 +10,6 @@ def make_manifest(args):
     os.chdir(WD)
 
     with open(manifest_file, "w") as f:
-        for i, j in enumerate(range(starting_num, len(array)+starting_num, 2)):
+        for i in range(0, len(array),2):
             f.write(
-                f"fq\tpaired\tUUID_{i}\tfile://{os.path.abspath(TDIR)}/{array[j]},file://{os.path.abspath(TDIR)}/{array[j + 1]}\n")
+                f"fq\tpaired\tUUID_{starting_num+int(i/2)}\tfile://{os.path.abspath(TDIR)}/{array[i]},file://{os.path.abspath(TDIR)}/{array[i+1]}\n")
