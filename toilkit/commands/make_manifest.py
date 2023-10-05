@@ -4,7 +4,7 @@ def make_manifest(args):
     WD = args.dir
     TDIR = args.tdir
     starting_num = args.starting_num
-    manifest_file = "manifest-toil-rnaseq-" + args.suffix
+    manifest_file = "manifest-toil-rnaseq" + args.suffix
     os.chdir(TDIR)
     array = sorted([f for f in os.listdir(TDIR) if f.endswith(".fastq.gz") or f.endswith(".fq.gz")])
     os.chdir(WD)

@@ -7,8 +7,8 @@ def cut_manifest(args):
         lines = f.readlines()
 
     num_files = len(lines)
-    for i in range(0, num_files, split_num):
-        ext = os.path.splitext(manifest_file)[1]
-        base = os.path.splitext(manifest_file)[0]
-        with open(f"{base}-{i//split_num+1}{ext}", 'w') as f:
-            f.writelines(lines[i:i + split_num])
+    ext = os.path.splitext(manifest_file)[1]
+    base = os.path.splitext(manifest_file)[0]
+    for manifest_num, i in enumerate(range(0, num_files, split_num)):
+        with open(f"{base}-{manifest_num+1}{ext}", 'w') as f:
+            f.writelines(lines[i : i + split_num])

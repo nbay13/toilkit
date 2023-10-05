@@ -1,4 +1,3 @@
-import sys
 import os
 def manifest_to_anno(args):
     input_file = args.infile
@@ -16,7 +15,6 @@ def manifest_to_anno(args):
             line = line.strip()
             if not line or line.startswith("#"):
                 continue
-
             # echo without quotes around variable automatically converts tabs (in original file) to spaces, hence the space delimiter
             uuid = line.split("\t")[2]
 

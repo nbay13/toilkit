@@ -38,22 +38,22 @@ def main():
 
     # Add subcommand for cat_bbseal
     parser_cat_bbseal = subparsers.add_parser('cat_bbseal')
-    parser_cat_bbseal.add_argument('--dir', help='The directory containing bbseal results')
+    parser_cat_bbseal.add_argument('--dir', nargs='?', help='The directory containing bbseal results', default = '.')
     parser_cat_bbseal.set_defaults(func=cat_bbseal)
 
     # Add subcommand for make_manifest
     parser_make_manifest = subparsers.add_parser('make_manifest')
-    parser_make_manifest.add_argument('--dir', help="The working directory")
+    parser_make_manifest.add_argument('--dir', nargs='?', help="The working directory", default= '.')
     parser_make_manifest.add_argument('--tdir', help="The target directory of the fastqs")
-    parser_make_manifest.add_argument('--suffix', default='.tsv', help="The suffix of the manifest file (ex. nathanson-15-1.tsv)")
-    parser_make_manifest.add_argument('--starting_num', default=0, type=int,
+    parser_make_manifest.add_argument('--suffix', nargs='?', default='.tsv', help="The suffix of the manifest file (ex. nathanson-15-1.tsv)")
+    parser_make_manifest.add_argument('--starting_num', nargs='?', default=0, type=int,
                         help="a number for each pair of fastq files listed in the manifest file")
     parser_make_manifest.set_defaults(func=make_manifest)
 
     # Add subcommand for manifest_to_anno
     parser_manifest_to_anno = subparsers.add_parser('manifest_to_anno')
     parser_manifest_to_anno.add_argument('--infile', help='The input manifest file')
-    parser_manifest_to_anno.add_argument('--outfile', help='The output annotation file')
+    parser_manifest_to_anno.add_argument('--outfile', help='The output annotation file', default = 'idkey.txt')
     parser_manifest_to_anno.set_defaults(func=manifest_to_anno)
 
     # Add subcommand for cut_manifest
@@ -66,21 +66,21 @@ def main():
     parser_gather_bbseal_metrics = subparsers.add_parser('gather_bbseal_metrics')
     parser_gather_bbseal_metrics.add_argument('--dir', help='The directory of the bbseal results',
                         default=' /media/graeberlab/My\ Book/RNA\ Batch\ 14/')
-    parser_gather_bbseal_metrics.add_argument('--out_name', help='The prefix of the output file', default='Nathanson-batch-14')
+    parser_gather_bbseal_metrics.add_argument('--outfile', help='The prefix of the output file', default='Nathanson-batch-14')
     parser_gather_bbseal_metrics.set_defaults(func=gather_bbseal_metrics)
 
     # Add subcommand for collate_qc_and_star_junctions
     parser_collate_qc_and_star_junctions = subparsers.add_parser('collate_qc_and_star_junctions')
-    parser_collate_qc_and_star_junctions.add_argument('--prefix', help='The annotation file name prefix',
+    parser_collate_qc_and_star_junctions.add_argument('--prefix', help='The annotation file name prefix', nargs = '?',
                                                       default='Nathanson_batch16')
-    parser_collate_qc_and_star_junctions.add_argument('--anno_filename', help='The annotation file',
+    parser_collate_qc_and_star_junctions.add_argument('--anno_filename', nargs = '?', help='The annotation file', nargs = '?',
                                                       default='annotation.tmp.txt')
     #parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
     #parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
-    parser_collate_qc_and_star_junctions.add_argument('--indir', help='The input path of annotation data', default='.')
+    parser_collate_qc_and_star_junctions.add_argument('--indir', help='The input path of annotation data', nargs = '?', default='.')
     parser_collate_qc_and_star_junctions.add_argument('--star_output',
                                                       help='The output path of where to put the star junctions data',
-                                                      default='junctions/')
+                                                      default='junctions/', nargs = '?')
     parser_collate_qc_and_star_junctions.set_defaults(bamqc=True, func = collate_qc_and_star_junctions)
 
     # Add subcommand for rename_toil_output
@@ -91,7 +91,7 @@ def main():
 
     #Add subcommand for batch_rename_TOIL_FAIL
     parser_batch_rename_TOIL_FAIL = subparsers.add_parser('batch_rename_TOIL_FAIL')
-    parser_batch_rename_TOIL_FAIL.add_argument('--dir', help='The directory containing the files to rename')
+    parser_batch_rename_TOIL_FAIL.add_argument('--dir', nargs = '?', default = '.', help='The directory containing the files to rename')
     parser_batch_rename_TOIL_FAIL.set_defaults(func=batch_rename_TOIL_FAIL)
 
 

@@ -6,7 +6,7 @@ import numpy as np
 
 def gather_bbseal_metrics(args):
   dir = args.dir
-  out_name = args.out_name
+  out_name = args.outfile
 
   print("Directory: " + dir)
   print("Output filename: " + out_name + "_BBSeal_mouse_read_filtering_results.tsv")
