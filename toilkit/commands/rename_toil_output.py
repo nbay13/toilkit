@@ -1,7 +1,7 @@
 import subprocess
 
 def rename_toil_output(args):
-    input_file = args.input_file
+    input_file = args.infile
     direction = args.direction
 
     with open(input_file, 'r') as f:

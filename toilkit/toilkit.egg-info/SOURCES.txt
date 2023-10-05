@@ -1,7 +1,5 @@
 README.md
 setup.py
-toilkit/__init__.py
-toilkit/cli.py
 toilkit.egg-info/PKG-INFO
 toilkit.egg-info/SOURCES.txt
 toilkit.egg-info/dependency_links.txt

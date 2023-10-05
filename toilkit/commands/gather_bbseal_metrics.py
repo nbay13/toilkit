@@ -5,13 +5,13 @@ import numpy as np
 
 
 def gather_bbseal_metrics(args):
-  direc = args.direc
+  dir = args.dir
   out_name = args.out_name
 
-  print("Directory: " + direc)
+  print("Directory: " + dir)
   print("Output filename: " + out_name + "_BBSeal_mouse_read_filtering_results.tsv")
 
-  os.chdir(direc)
+  os.chdir(dir)
 
   sample_direcs = [name for name in os.listdir(".") if os.path.isdir(name)]
   print("BBSeal results found for these samples:\n" + '\n'.join(sample_direcs))

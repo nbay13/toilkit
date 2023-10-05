@@ -24,7 +24,7 @@ def rename_by_key(args):
   # open the file and start reading lines
   with open(keyname) as f:
     # we don't need the first line, but we can store it as a list if we want
-    header = [l.rstrip() for l in f.readline().split('\t')]
+    # header = [l.rstrip() for l in f.readline().split('\t')]
     for line in f:
       # split the string by tabs into a list,
       # iterate over the list and remove the newline special character,

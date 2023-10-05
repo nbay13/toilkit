@@ -1,6 +1,5 @@
 # Import necessary modules
 from Bio import SeqIO
-import argparse
 import os
 import glob
 import gzip

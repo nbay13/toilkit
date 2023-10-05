@@ -12,7 +12,7 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'toilkit = cli:main',
+            'toilkit = toilkit.cli:main',
         ],
     },
 )

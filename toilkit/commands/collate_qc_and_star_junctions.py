@@ -83,7 +83,7 @@ def collate_qc_and_star_junctions(args):
     prefix = args.prefix
     anno_filename = args.anno_filename
     bam_qc = args.bamqc
-    input_path = args.input_dir
+    input_path = args.indir
     output_path = args.star_output
 
     if len(input_path) > 0:
