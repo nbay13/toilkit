@@ -73,7 +73,7 @@ def main():
     parser_collate_qc_and_star_junctions = subparsers.add_parser('collate_qc_and_star_junctions')
     parser_collate_qc_and_star_junctions.add_argument('--prefix', help='The annotation file name prefix', nargs = '?',
                                                       default='Nathanson_batch16')
-    parser_collate_qc_and_star_junctions.add_argument('--anno_filename', nargs = '?', help='The annotation file', nargs = '?',
+    parser_collate_qc_and_star_junctions.add_argument('--anno_filename', nargs = '?', help='The annotation file',
                                                       default='annotation.tmp.txt')
     #parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
     #parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
