@@ -10,6 +10,7 @@ from .commands.gather_bbseal_metrics import gather_bbseal_metrics
 from .commands.collate_qc_and_star_junctions import collate_qc_and_star_junctions, write_star, prepare_read_fastqc
 from .commands.rename_toil_output import rename_toil_output
 from .commands.batch_rename_TOIL_FAIL import batch_rename_TOIL_FAIL
+from .commands.to_uuid_parser import to_uuid_parser
 
 def main():
     parser = argparse.ArgumentParser(prog='toilkit')
@@ -94,6 +95,13 @@ def main():
     parser_batch_rename_TOIL_FAIL.add_argument('--dir', nargs = '?', default = '.', help='The directory containing the files to rename')
     parser_batch_rename_TOIL_FAIL.set_defaults(func=batch_rename_TOIL_FAIL)
 
+    #Add subcommand for 2uuid_parser
+    parser_2uuid_parser = subparsers.add_parser('2uuid_parser')
+    parser_2uuid_parser.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
+    parser_2uuid_parser.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
+    parser_2uuid_parser.add_argument('--min_id', nargs = '?', help = 'the minimum UUID value', default = 0)
+    parser_2uuid_parser.add_argument('--input_dir', nargs = '?', help='The input path of annotation data', default = '.')
+    parser_2uuid_parser.set_defaults(func=to_uuid_parser)
 
     args = parser.parse_args()
     args.func(args)
