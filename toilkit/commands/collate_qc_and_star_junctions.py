@@ -16,8 +16,7 @@ import csv
 import pandas as pd
 import numpy as np
 import re
-import argparse
-# Declare global variables here
+
 avail_reads = []
 total_r1_reads = []
 dedup_r1_rates = []

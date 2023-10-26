@@ -2,39 +2,50 @@ import os
 import shutil
 import tarfile
 
+def extract_and_rename(input_file, output_dir):
+    with tarfile.open(input_file, "r:gz") as tar:
+        tar.extractall(path=output_dir)
+
+    extracted_folder = os.path.join(output_dir, os.path.splitext(os.path.basename(input_file))[0])
+    uuid = os.path.basename(extracted_folder).split('.')[1]
+    new_path = os.path.join(output_dir, uuid)
+
+    os.rename(extracted_folder, new_path)
+
+    return new_path, uuid
+
+def re_archive_and_rename(input_dir, output_dir, uuid):
+    new_archive_name = f"{uuid}.tar.gz"
+    output_file = os.path.join(output_dir, new_archive_name)
+
+    with tarfile.open(output_file, "w:gz") as new_tar:
+        for root, _, files in os.walk(input_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                relative_path = os.path.relpath(file_path, input_dir)
+                updated_path = os.path.join(uuid, relative_path)
+                new_tar.add(file_path, arcname=updated_path)
+
+    return output_file
+
 def batch_rename_TOIL_FAIL(args):
-    # Create a directory for renamed files in the specified directory
     renamed_dir = os.path.join(args.dir, "renamed")
     os.makedirs(renamed_dir, exist_ok=True)
 
     for file in os.listdir(args.dir):
         file_path = os.path.join(args.dir, file)
+
         if file.startswith("FAIL.") and file.endswith(".tar.gz"):
             print(f"Processing file: {file}")
 
-            # Extract the UUID from the file name
-            new_name = file.split(".")[1]
-            new_path = os.path.join(args.dir, new_name)
-            
-            # Unzipping the file
-            print(f"\tExtracting file: {file}")
-            with tarfile.open(file_path, "r:gz") as tar:
-                tar.extractall(path=args.dir)
+            try:
+                extracted_dir, uuid = extract_and_rename(file_path, args.dir)
+                new_archive_file = re_archive_and_rename(extracted_dir, args.dir, uuid)
 
-            # Renaming the FAIL.UUID_X folder that got extracted
-            extracted_folder = os.path.join(args.dir, file.replace(".tar.gz", ""))  
-            print(f"\tRenaming folder: {extracted_folder} to {new_path}")
-            os.rename(extracted_folder, new_path)
+                # Clean up
+                os.remove(file_path)
+                shutil.rmtree(extracted_dir)
+                shutil.move(new_archive_file, renamed_dir)
 
-            # Create a new tar.gz archive as UUID_X.tar.gz
-            print(f"\tCreating new archive: {new_name}.tar.gz")
-            with tarfile.open(os.path.join(args.dir, new_name + ".tar.gz"), "w:gz") as tar:
-                tar.add(new_path)
-
-            # Remove the extracted folder
-            print(f"\tRemoving extracted folder: {new_path}")
-            shutil.rmtree(new_path)
-
-            # Move the original file to the 'renamed' directory
-            print(f"\tMoving original file: {file} to {os.path.join(renamed_dir, file)}")
-            shutil.move(file_path, os.path.join(renamed_dir, file))
+            except Exception as e:
+                print(f"Error processing {file}: {str(e)}")
