@@ -6,8 +6,8 @@ def extract_and_rename(input_file, output_dir):
     with tarfile.open(input_file, "r:gz") as tar:
         tar.extractall(path=output_dir)
 
-    extracted_folder = os.path.join(output_dir, os.path.basename(input_file).split(os.extsep)[0])
-    uuid = os.path.basename(extracted_folder).split('.')[1]
+    uuid = os.path.basename(input_file).split('.')[1]
+    extracted_folder = os.path.join(output_dir, 'FAIL.' + uuid)
     new_path = os.path.join(output_dir, uuid)
 
     os.rename(extracted_folder, new_path)
