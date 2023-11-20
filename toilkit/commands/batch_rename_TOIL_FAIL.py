@@ -43,9 +43,7 @@ def batch_rename_TOIL_FAIL(args):
                 new_archive_file = re_archive_and_rename(extracted_dir, args.dir, uuid)
 
                 # Clean up
-                os.remove(file_path)
                 shutil.rmtree(extracted_dir)
-                shutil.move(new_archive_file, renamed_dir)
-
+                shutil.move(file_path, renamed_dir)
             except Exception as e:
                 print(f"Error processing {file}: {str(e)}")
