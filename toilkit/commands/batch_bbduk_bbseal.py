@@ -5,7 +5,7 @@ import glob
 
 def bbduk_bbseal(args):
     bbduk = args.bbdukdir + '/bbduk.sh'
-    bbseal = args.bbsealdir + '/seal.sh'
+    bbseal = args.bbdukdir + '/seal.sh'
 
     # get filenames
     NAMES = []

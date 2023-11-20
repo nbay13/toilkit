@@ -34,7 +34,6 @@ def main():
     # Add subcommand for bbduk_bbseal
     parser_bbduk_bbseal = subparsers.add_parser('bbduk_bbseal')
     parser_bbduk_bbseal.add_argument('--bbdukdir', help='The directory containing bbduk.sh')
-    parser_bbduk_bbseal.add_argument('--bbsealdir', help='The directory containing bbseal.sh')
     parser_bbduk_bbseal.set_defaults(func=bbduk_bbseal)
 
     # Add subcommand for cat_bbseal
