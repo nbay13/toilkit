@@ -55,7 +55,7 @@ def prepare_read_fastqc(files, tar):
             r2_filename = name
     if bam_qc:
         file = tar.extractfile(bamqc_filename)
-	text_file = io.TextIOWrapper(file, encoding = 'utf-8')
+        text_file = io.TextIOWrapper(file, encoding = 'utf-8')
         data = csv.reader(text_file, delimiter='\t')
         header = next(data)
         avail_reads.append(next(data)[1])
