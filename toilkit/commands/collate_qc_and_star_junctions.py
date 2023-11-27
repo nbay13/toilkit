@@ -107,7 +107,7 @@ def collate_qc_and_star_junctions(args):
             anno_dict[uuid] = samplename
 
     folders = glob.glob(input_path + 'UUID_[0-9]*.tar.gz')
-    toil_ids = [dir.rsplit('.')[0] for dir in folders]
+    toil_ids = [os.path.basename(dir).rsplit('.')[0] for dir in folders]
     # checks if all folders are in annotation file
     if any([id not in anno_dict.keys() for id in toil_ids]):
         sys.exit("Error: Missing UUID annotations")
