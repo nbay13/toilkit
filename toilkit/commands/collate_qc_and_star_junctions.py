@@ -63,7 +63,8 @@ def prepare_read_fastqc(files, tar):
     r1_file = tar.extractfile(r1_filename)
     with zipfile.ZipFile(r1_file, 'r') as zip:
         with zip.open('R1_fastqc/fastqc_data.txt') as txt:
-            content = txt.readlines()
+            byte_content = txt.readlines()
+            content = [line.decode('utf-8') for line in byte_content]
             total_r1_reads.append(content[6].rsplit('\t')[1].strip())
             for line in content:
                 if 'Total Deduplicated Percentage' in line:
@@ -72,7 +73,8 @@ def prepare_read_fastqc(files, tar):
     r2_file = tar.extractfile(r2_filename)
     with zipfile.ZipFile(r2_file, 'r') as zip:
         with zip.open('R2_fastqc/fastqc_data.txt') as txt:
-            content = txt.readlines()
+            byte_content = txt.readlines()
+            content = [line.decode('utf-8') for line in byte_content]
             total_r2_reads.append(content[6].rsplit('\t')[1].strip())
             for line in content:
                 if 'Total Deduplicated Percentage' in line:
