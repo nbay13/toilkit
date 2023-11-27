@@ -38,7 +38,7 @@ def write_star(files, tar, i):
     print('...Writing STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
     with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'w') as output:
         for line in lines:
-            output.write(line)
+            output.write(bytes.decode(line))
 
 '''
 Unzips r1 and r2 fastqc files and extracts total reads, dedup reads , etc
