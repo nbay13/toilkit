@@ -99,7 +99,7 @@ def to_uuid_parser(args):
 
     #for uuid_num in tqdm(desc="Processing Samples: ", unit="samples", iterable=range(min_id, len(folders))):
     for uuid_num in range(min_id, len(folders)):    
-    file_name = os.path.join(input_path, f"UUID_{uuid_num}.tar.gz")
+        file_name = os.path.join(input_path, f"UUID_{uuid_num}.tar.gz")
         modify_duplicates_extract_info(file_name, str(uuid_num), 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes')
         modify_duplicates_extract_info(file_name, str(uuid_num), 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo')
         modify_duplicates_extract_info(file_name, str(uuid_num), 'RSEM/rsem_isoforms.results', 'rsem_transcripts')
