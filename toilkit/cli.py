@@ -95,7 +95,7 @@ def main():
     parser_batch_rename_TOIL_FAIL.set_defaults(func=batch_rename_TOIL_FAIL)
 
     #Add subcommand for 2uuid_parser
-    parser_2uuid_parser = subparsers.add_parser('2uuid_parser')
+    parser_2uuid_parser = subparsers.add_parser('to_uuid_parser')
     parser_2uuid_parser.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
     parser_2uuid_parser.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
     parser_2uuid_parser.add_argument('--min_id', nargs = '?', help = 'the minimum UUID value', default = 0)
