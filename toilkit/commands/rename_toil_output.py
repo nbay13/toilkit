@@ -1,4 +1,5 @@
-import subprocess
+import pysam
+import os
 
 def rename_toil_output(args):
     input_file = args.infile
@@ -14,10 +15,15 @@ def rename_toil_output(args):
             else:
                 new = p[0]
                 orig = p[1]
-            subprocess.run(['tar', '-xvzf', orig+'.tar.gz'])
-            subprocess.run(['mv', orig, new])
-            subprocess.run(['tar', '-czvf', new+'.tar.gz', new])
-            subprocess.run(['rm', '-r', new])
-            subprocess.run(['rm', orig+'.tar.gz'])
-            subprocess.run(['mv', orig+'.sortedByCoord.md.bam', new+'.sortedByCoord.md.bam'])
 
+            # Extract and rename the BAM file
+            with pysam.AlignmentFile(orig + '.sortedByCoord.md.bam', 'rb') as orig_bam:
+                new_bam = pysam.AlignmentFile(new + '.sortedByCoord.md.bam', 'wb', header=orig_bam.header)
+                for read in orig_bam:
+                    read.query_name = new + ':' + read.query_name
+                    new_bam.write(read)
+                new_bam.close()
+
+            # Cleanup original files
+            os.remove(orig + '.tar.gz')
+            os.remove(orig + '.sortedByCoord.md.bam')
