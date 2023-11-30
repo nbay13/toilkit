@@ -20,7 +20,7 @@ def to_uuid_parser(args):
     min_id = int(args.min_id)
     input_path = args.input_dir
 
-    def get_exp_values(line, gene_list, gene_list_renamed):
+    def get_exp_val(line, gene_list, gene_list_renamed):
         new_line = bytes.decode(line)
         newer_line = new_line.rstrip("\n").split("\t")
         gene_list.append(newer_line[0])
