@@ -71,8 +71,6 @@ def to_uuid_parser(args):
         
         index = 0
         for gene_entry in tqdm(results_file, desc="Processing genes", unit=' genes'):
-            if index == 20:
-                break
             gene_exp_info = bytes.decode(gene_entry).rstrip("\n").split("\t")
             gene_name = gene_exp_info[0]
             
