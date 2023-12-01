@@ -96,7 +96,7 @@ def prepare_read_fastqc(files, tar):
     mapping_rate.append(content[9].rsplit('\t')[1].rstrip())
     map_read_length.append(content[10].rsplit('\t')[1].rstrip())
     multi_map_rate.append(content[24].rsplit('\t')[1].rstrip())
-    unmap_mismatch_rate.append(content[29].rsplit('\t')[1].rstrip())
+    unmap_mismatch_rate.append(content[28].rsplit('\t')[1].rstrip())
     unmap_short_rate.append(content[29].rsplit('\t')[1].rstrip())
 
 def collate_qc_and_star_junctions(args):
@@ -153,7 +153,7 @@ def collate_qc_and_star_junctions(args):
                            'Avg mapped read length': np.array(map_read_length, dtype='float'),
                            'Multi-mapping rate': np.round(np.array(multi_map_rate, dtype='float'), 2),
                            'Unmapped rate (short)': np.round(np.array(unmap_short_rate, dtype='float'), 2),
-                           'Unmapped rate (mismatch)': np.round(np.array(umap_mismatch_rate, dtype='float'), 2),
+                           'Unmapped rate (mismatch)': np.round(np.array(unmap_mismatch_rate, dtype='float'), 2),
                            'Total Mapped Dedup reads': avail_reads})
         df['Sample'] = [anno_dict[id] for id in toil_ids]
         df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate',
@@ -167,7 +167,7 @@ def collate_qc_and_star_junctions(args):
                            'Avg mapped read length': np.array(map_read_length, dtype='float'),
                            'Multi-mapping rate': np.round(np.array(multi_map_rate, dtype='float'), 2),
                            'Unmapped rate (short)': np.round(np.array(unmap_short_rate, dtype='float'), 2),
-                           'Unmapped rate (mismatch)': np.round(np.array(umap_mismatch_rate, dtype='float'), 2)})
+                           'Unmapped rate (mismatch)': np.round(np.array(unmap_mismatch_rate, dtype='float'), 2)})
         df['Sample'] = [anno_dict[id] for id in toil_ids]
         df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate',
                  'Mapping rate', 'Avg mapped read length', 'Multi-mapping rate', 'Unmapped rate (short)', 'Unmapped rate (mismatch)']]
