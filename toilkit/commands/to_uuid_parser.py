@@ -20,96 +20,50 @@ def to_uuid_parser(args):
     min_id = int(args.min_id)
     input_path = args.input_dir
 
-    def get_exp_val(line, gene_list, gene_list_renamed):
-        new_line = bytes.decode(line)
-        newer_line = new_line.rstrip("\n").split("\t")
-        gene_list.append(newer_line[0])
-        num_copies = gene_list.count(newer_line[0])
-        if num_copies == 1:
-            gene_list_renamed.append(newer_line[0])
-        elif num_copies >= 2:
-            new_name = newer_line[0] + "." + str(num_copies-1)
-            gene_list_renamed.append(new_name)
-        return newer_line, gene_list, gene_list_renamed
+    gene_list = []
+    gene_list_renamed = []
 
-    def modify_duplicates_extract_info(tar_filename, uuid_num, results_name, infotype):
+    def open_tar_gz_for_extraction(tar_filename):
+        with tarfile.open(tar_filename) as tar:
+            extract_specific_results(tar, str(uuid_num), 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes')
+            extract_specific_results(tar, str(uuid_num), 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo')
+            extract_specific_results(tar, str(uuid_num), 'RSEM/rsem_isoforms.results', 'rsem_transcripts')
+    
+    def extract_specific_results(tar: tarfile.TarFile, uuid_num: str, results_name, infotype):
         nonlocal rsem_genes_raw_dict, rsem_genes_tpm_dict, rsem_transcripts_hugo_raw_dict, \
-        rsem_transcripts_hugo_tpm_dict, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict
-
-        gene_list = []
-        gene_list_renamed = []
+        rsem_transcripts_hugo_tpm_dict, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict, gene_list, gene_list_renamed
         raw_counts = defaultdict(list)
         tpm_counts = defaultdict(list)
+        results_file_path = os.path.normpath(os.path.join(f'UUID_{uuid_num}', results_name)).replace('\\', '/')
+        print("\nProcessing ", results_file_path)
+        results_file = tar.extractfile(results_file_path)
+        results_file.readline()
+        heading = [anno_dict[f"UUID_{uuid_num}"]]
+        raw_counts['gene'] = heading
+        tpm_counts['gene'] = heading
 
-        with tarfile.open(tar_filename) as tar:
-            file_new_path = os.path.normpath(os.path.join(f'UUID_{uuid_num}', results_name)).replace('\\', '/')
-            print("\nProcessing ", file_new_path)
-            file_new = tar.extractfile(file_new_path)
-            content = file_new.readlines()[1:]
-            heading = [anno_dict[f"UUID_{uuid_num}"]]
-            raw_counts['gene'] = heading
-            tpm_counts['gene'] = heading
-
-            # Update the appropriate dictionaries based on infotype
-            if infotype == 'rsem_genes':            
-                for line in content:
-                    # not sure if need to return gene_list and gene_list_renamed
-                    newer_line, gene_list, gene_list_renamed = get_exp_val(line, gene_list, gene_list_renamed)
-                    rsem_genes_raw_dict[gene_list_renamed[-1]].append(newer_line[4])
-                    rsem_genes_tpm_dict[gene_list_renamed[-1]].append(newer_line[5])
-            elif infotype == 'rsem_transcripts_hugo':
-                for line in content:
-                    newer_line, gene_list, gene_list_renamed = get_exp_val(line, gene_list, gene_list_renamed)
-                    rsem_transcripts_hugo_raw_dict[gene_list_renamed[-1]].append(newer_line[4])
-                    rsem_transcripts_hugo_tpm_dict[gene_list_renamed[-1]].append(newer_line[5])
-            elif infotype == 'rsem_transcripts':
-                for line in content:
-                    newer_line, gene_list, gene_list_renamed = get_exp_val(line, gene_list, gene_list_renamed)                   
-                    rsem_transcripts_raw_dict[gene_list_renamed[-1]].append(newer_line[4])
-                    rsem_transcripts_tpm_dict[gene_list_renamed[-1]].append(newer_line[5])
-            
-        print("Completed processing ", file_new_path, "\n")
-
-    def modify_duplicates_extract_info_old(tar_filename, uuid_num, results_name, infotype):
-        nonlocal rsem_genes_raw_dict, rsem_genes_tpm_dict, rsem_transcripts_hugo_raw_dict, \
-        rsem_transcripts_hugo_tpm_dict, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict
-
-        gene_list = []
-        gene_list_renamed = []
-        raw_counts = defaultdict(list)
-        tpm_counts = defaultdict(list)
-
-        with tarfile.open(tar_filename) as tar:
-            file_new_path = os.path.normpath(os.path.join(f'UUID_{uuid_num}', results_name)).replace('\\', '/')
-            print("\nProcessing ", file_new_path)
-            file_new = tar.extractfile(file_new_path)
-            content = file_new.readlines()[1:]
-            heading = [anno_dict[f"UUID_{uuid_num}"]]
-            raw_counts['gene'] = heading
-            tpm_counts['gene'] = heading
-
-            for line in content:
-                new_line = bytes.decode(line)
-                newer_line = new_line.rstrip("\n").split("\t")
-                gene_list.append(newer_line[0])
-                num_copies = gene_list.count(newer_line[0])
+        for gene_entry in tqdm(results_file, desc="Processing genes", unit= ' genes'):
+            gene_exp_info = bytes.decode(gene_entry).rstrip("\n").split("\t")
+            gene_name = gene_exp_info[0]
+            if int(uuid_num) == min_id: #catalog duplicates if we are on the first sample only
+                gene_list.append(gene_name)
+                num_copies = gene_list.count(gene_name)
                 if num_copies == 1:
-                    gene_list_renamed.append(newer_line[0])
+                    gene_list_renamed.append(gene_name)
                 elif num_copies >= 2:
-                    new_name = newer_line[0] + "." + str(num_copies-1)
-                    gene_list_renamed.append(new_name)
-
-                raw_counts[gene_list_renamed[-1]].append(newer_line[4])
-                tpm_counts[gene_list_renamed[-1]].append(newer_line[5])
-
-            # Update the appropriate dictionaries based on infotype
-            if infotype == 'rsem_genes':
-                update_global_dicts(raw_counts, tpm_counts, rsem_genes_raw_dict, rsem_genes_tpm_dict)
-            elif infotype == 'rsem_transcripts_hugo':
-                update_global_dicts(raw_counts, tpm_counts, rsem_transcripts_hugo_raw_dict, rsem_transcripts_hugo_tpm_dict)
-            elif infotype == 'rsem_transcripts':
-                update_global_dicts(raw_counts, tpm_counts, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict)
-            print("Completed processing ", file_new_path, "\n")
+                    gene_name = gene_name + "." + str(num_copies-1)
+                    gene_list_renamed.append(gene_name)
+            raw_counts[gene_name].append(gene_exp_info[4])
+            tpm_counts[gene_name].append(gene_exp_info[5])
+            
+        # Update the appropriate dictionaries based on infotype
+        if infotype == 'rsem_genes':
+            update_global_dicts(raw_counts, tpm_counts, rsem_genes_raw_dict, rsem_genes_tpm_dict)
+        elif infotype == 'rsem_transcripts_hugo':
+            update_global_dicts(raw_counts, tpm_counts, rsem_transcripts_hugo_raw_dict, rsem_transcripts_hugo_tpm_dict)
+        elif infotype == 'rsem_transcripts':
+            update_global_dicts(raw_counts, tpm_counts, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict)
+        print("Completed processing ", results_file_path, "\n")
 
     def update_global_dicts(raw_counts: defaultdict, tpm_counts: defaultdict, raw_dict: defaultdict(list), tpm_dict: defaultdict(list)):
         # Update global dictionaries
@@ -121,8 +75,13 @@ def to_uuid_parser(args):
 
     def finalize_write(filename, data_dict):
         # Convert global dictionaries to DataFrames
-        df = pd.DataFrame(data_dict)
+        # print("\n")
+        # print("Debugging purposes")
+        # print(data_dict, len(data_dict))
+        # print("\n")
 
+        df = pd.DataFrame(data_dict)
+        
         # Set index, sort columns, and transpose
         df.set_index('gene', inplace=True)
         df.sort_index(axis=1, inplace=True)
@@ -147,12 +106,9 @@ def to_uuid_parser(args):
     if any(toil_id not in toil_ids for toil_id in anno_dict):
         sys.exit("Error: Missing UUID folders")
 
-    #for uuid_num in range(min_id, len(folders)):
     for uuid_num in tqdm(desc="Processing Samples: ", unit="samples", iterable=range(min_id, len(folders))):
         file_name = os.path.join(input_path, f"UUID_{uuid_num}.tar.gz")
-        modify_duplicates_extract_info(file_name, str(uuid_num), 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes')
-        modify_duplicates_extract_info(file_name, str(uuid_num), 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo')
-        modify_duplicates_extract_info(file_name, str(uuid_num), 'RSEM/rsem_isoforms.results', 'rsem_transcripts')
+        open_tar_gz_for_extraction(file_name)
     finalize_write(os.path.join(input_path , f"{prefix}_rsem_genes_raw_counts.txt"), rsem_genes_raw_dict)
     finalize_write(os.path.join(input_path , f"{prefix}_rsem_genes_tpm_counts.txt"), rsem_genes_tpm_dict)
     finalize_write(f"{prefix}_rsem_transcripts_hugo_raw_counts.txt", rsem_transcripts_hugo_raw_dict)
