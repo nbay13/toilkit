@@ -1,7 +1,7 @@
 #!/usr/bin/python
 '''
 Author: Nick Bayley, William Huang
-Last edited: 3/2023
+Last edited: 12/2023
 Description: A script for collating total reads, duplication rates, and
 total mapped deduplicated reads data from FastQC and BamQC results in TOIL output,
 and gathering junction data from TOIL STAR output and renaming the files based on an annotation file.
@@ -23,6 +23,13 @@ total_r1_reads = []
 dedup_r1_rates = []
 total_r2_reads = []
 dedup_r2_rates = []
+
+mapping_rate = []
+map_read_length = []
+multi_map_rate = []
+unmap_mismatch_rate = []
+unmap_short_rate = []
+
 prefix = None
 anno_filename = None
 bam_qc = None
@@ -53,6 +60,8 @@ def prepare_read_fastqc(files, tar):
             r1_filename = name
         elif 'R2_fastqc.zip' in name:
             r2_filename = name
+        elif 'Log.final.out' in name:
+            star_filename = name
     if bam_qc:
         file = tar.extractfile(bamqc_filename)
         text_file = io.TextIOWrapper(file, encoding = 'utf-8')
@@ -80,6 +89,15 @@ def prepare_read_fastqc(files, tar):
                 if 'Total Deduplicated Percentage' in line:
                     dedup_r2_rates.append(line.rsplit('\t')[1].strip())
                     break
+    star_file = tar.extractfile(star_filename)
+    byte_content = star_file.readlines()
+    content = [line.decode('utf-8') for line in byte_content]
+
+    mapping_rate.append(content[9].rsplit('\t')[1].rstrip())
+    map_read_length.append(content[10].rsplit('\t')[1].rstrip())
+    multi_map_rate.append(content[24].rsplit('\t')[1].rstrip())
+    unmap_mismatch_rate.append(content[29].rsplit('\t')[1].rstrip())
+    unmap_short_rate.append(content[29].rsplit('\t')[1].rstrip())
 
 def collate_qc_and_star_junctions(args):
     global prefix, anno_filename, bam_qc, input_path, output_path, anno_dict, toil_ids, avail_reads
@@ -131,16 +149,28 @@ def collate_qc_and_star_junctions(args):
         df = pd.DataFrame({'UUID': toil_ids, 'Total R1 reads': total_r1_reads, 'Total R2 reads': total_r2_reads,
                            'Duplication R1 rate': np.round(100 - np.array(dedup_r1_rates, dtype='float'), 2),
                            'Duplication R2 rate': np.round(100 - np.array(dedup_r2_rates, dtype='float'), 2),
+                           'Mapping rate': np.round(np.array(mapping_rate, dtype='float'), 2),
+                           'Avg mapped read length': np.array(map_read_length, dtype='float'),
+                           'Multi-mapping rate': np.round(np.array(multi_map_rate, dtype='float'), 2),
+                           'Unmapped rate (short)': np.round(np.array(unmap_short_rate, dtype='float'), 2),
+                           'Unmapped rate (mismatch)': np.round(np.array(umap_mismatch_rate, dtype='float'), 2),
                            'Total Mapped Dedup reads': avail_reads})
         df['Sample'] = [anno_dict[id] for id in toil_ids]
         df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate',
+                 'Mapping rate', 'Avg mapped read length', 'Multi-mapping rate', 'Unmapped rate (short)', 'Unmapped rate (mismatch)',
                  'Total Mapped Dedup reads']]
     else:
         df = pd.DataFrame({'UUID': toil_ids, 'Total R1 reads': total_r1_reads, 'Total R2 reads': total_r2_reads,
                            'Duplication R1 rate': np.round(100 - np.array(dedup_r1_rates, dtype='float'), 2),
-                           'Duplication R2 rate': np.round(100 - np.array(dedup_r2_rates, dtype='float'), 2)})
+                           'Duplication R2 rate': np.round(100 - np.array(dedup_r2_rates, dtype='float'), 2),
+                           'Mapping rate': np.round(np.array(mapping_rate, dtype='float'), 2),
+                           'Avg mapped read length': np.array(map_read_length, dtype='float'),
+                           'Multi-mapping rate': np.round(np.array(multi_map_rate, dtype='float'), 2),
+                           'Unmapped rate (short)': np.round(np.array(unmap_short_rate, dtype='float'), 2),
+                           'Unmapped rate (mismatch)': np.round(np.array(umap_mismatch_rate, dtype='float'), 2)})
         df['Sample'] = [anno_dict[id] for id in toil_ids]
-        df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate']]
+        df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate',
+                 'Mapping rate', 'Avg mapped read length', 'Multi-mapping rate', 'Unmapped rate (short)', 'Unmapped rate (mismatch)']]
     df.to_csv(prefix + "_Toil_qc_data.tsv", sep='\t', index=False)
     print("\nDone! TOIL QC data written as .tsv to " + os.getcwd() + '\n')
 
