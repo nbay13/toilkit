@@ -29,9 +29,11 @@ def to_uuid_parser(args):
     min_id = int(args.min_id)
     input_path = args.input_dir
 
-    gene_list = []
-    gene_set = set()
-    gene_occurences = {}
+    gene_lists = {
+        'genes': [],
+        'transcripts_hugo': [],
+        'transcripts': []
+    }
 
     def open_tar_gz_for_extraction(tar_filename):
         """
@@ -63,7 +65,10 @@ def to_uuid_parser(args):
             None
         """
         nonlocal rsem_genes_raw_dict, rsem_genes_tpm_dict, rsem_transcripts_hugo_raw_dict, \
-        rsem_transcripts_hugo_tpm_dict, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict, gene_list, gene_set
+        rsem_transcripts_hugo_tpm_dict, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict, gene_lists
+        gene_list = []
+        gene_set = set()
+        gene_occurences = {}
         results_file_path = os.path.normpath(os.path.join(f'UUID_{uuid_num}', results_name)).replace('\\', '/')
         print("\nProcessing ", results_file_path)
         results_file = tar.extractfile(results_file_path)
@@ -88,14 +93,19 @@ def to_uuid_parser(args):
 
             raw_count = gene_exp_info[4]
             tpm_count = gene_exp_info[5]
-            print(gene_name, gene_list[index])
             # Update the appropriate dictionaries based on infotype
             if infotype == 'rsem_genes':
-                update_global_dicts(gene_list[index], raw_count, tpm_count, rsem_genes_raw_dict, rsem_genes_tpm_dict)
+                if int(uuid_num) == min_id:
+                    gene_lists['genes'] = gene_list
+                update_global_dicts(gene_lists['genes'][index], raw_count, tpm_count, rsem_genes_raw_dict, rsem_genes_tpm_dict)
             elif infotype == 'rsem_transcripts_hugo':
-                update_global_dicts(gene_list[index], raw_count, tpm_count, rsem_transcripts_hugo_raw_dict, rsem_transcripts_hugo_tpm_dict)
+                if int(uuid_num) == min_id:
+                    gene_lists['transcripts_hugo'] = gene_list
+                update_global_dicts(gene_lists['transcripts_hugo'][index], raw_count, tpm_count, rsem_transcripts_hugo_raw_dict, rsem_transcripts_hugo_tpm_dict)
             elif infotype == 'rsem_transcripts':
-                update_global_dicts(gene_list[index], raw_count, tpm_count, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict)
+                if int(uuid_num) == min_id:
+                    gene_lists['transcripts'] = gene_list
+                update_global_dicts(gene_lists['transcripts'][index], raw_count, tpm_count, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict)
             index += 1
 
         print("Completed processing ", results_file_path, "\n")
@@ -191,7 +201,7 @@ def to_uuid_parser(args):
         
     finalize_write(os.path.join(input_path, f"{prefix}_rsem_genes_raw_counts.txt"), rsem_genes_raw_dict)
     finalize_write(os.path.join(input_path, f"{prefix}_rsem_genes_tpm_counts.txt"), rsem_genes_tpm_dict)
-    # finalize_write(f"{prefix}_rsem_transcripts_hugo_raw_counts.txt", rsem_transcripts_hugo_raw_dict)
-    # finalize_write(f"{prefix}_rsem_transcripts_hugo_tpm_counts.txt", rsem_transcripts_hugo_tpm_dict)
-    # finalize_write(f"{prefix}_rsem_transcripts_raw_counts.txt", rsem_transcripts_raw_dict)
-    # finalize_write(f"{prefix}_rsem_transcripts_tpm_counts.txt", rsem_transcripts_tpm_dict)
+    finalize_write(os.path.join(input_path, f"{prefix}_rsem_transcripts_hugo_raw_counts.txt"), rsem_transcripts_hugo_raw_dict)
+    finalize_write(os.path.join(input_path,f"{prefix}_rsem_transcripts_hugo_tpm_counts.txt"), rsem_transcripts_hugo_tpm_dict)
+    finalize_write(os.path.join(input_path,f"{prefix}_rsem_transcripts_raw_counts.txt"), rsem_transcripts_raw_dict)
+    finalize_write(os.path.join(input_path,f"{prefix}_rsem_transcripts_tpm_counts.txt"), rsem_transcripts_tpm_dict)
