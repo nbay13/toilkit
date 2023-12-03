@@ -38,14 +38,23 @@ output_path = None
 anno_dict = {}
 toil_ids = []
 
+import shutil
+
 def write_star(files, tar, i):
     global anno_dict, toil_ids, output_path
     junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
-    file = tar.extractfile(junction_filename)
-    lines = file.readlines()
-    print('...Writing STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
-    with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as output:
-            output.writelines(lines)
+    print('...Copying STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
+    with tar.extractfile(junction_filename) as src, open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as dst:
+        shutil.copyfileobj(src, dst)
+
+#try this one too, uses tar.extract instead of extractfile
+# def write_star_v2(files, tar, i):
+#     global anno_dict, toil_ids, output_path
+#     junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
+#     print('...Copying STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
+#     with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as dst:
+#         tar.extract(junction_filename, dst)
+
 
 '''
 Unzips r1 and r2 fastqc files and extracts total reads, dedup reads , etc

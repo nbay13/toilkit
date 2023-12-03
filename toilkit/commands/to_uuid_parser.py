@@ -67,7 +67,6 @@ def to_uuid_parser(args):
         nonlocal rsem_genes_raw_dict, rsem_genes_tpm_dict, rsem_transcripts_hugo_raw_dict, \
         rsem_transcripts_hugo_tpm_dict, rsem_transcripts_raw_dict, rsem_transcripts_tpm_dict, gene_lists
         gene_list = []
-        gene_set = set()
         gene_occurences = {}
         results_file_path = os.path.normpath(os.path.join(f'UUID_{uuid_num}', results_name)).replace('\\', '/')
         print("\nProcessing ", results_file_path)
@@ -80,8 +79,7 @@ def to_uuid_parser(args):
             gene_name = gene_exp_info[0]
             
             if int(uuid_num) == min_id:
-                if gene_name not in gene_set:
-                    gene_set.add(gene_name)
+                if gene_name not in gene_occurences:
                     gene_occurences[gene_name] = 1
                     gene_list.append(gene_name)
                 else:
