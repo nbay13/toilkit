@@ -73,22 +73,30 @@ def prepare_read_fastqc(files, tar):
     with zipfile.ZipFile(r1_file, 'r') as zip:
         with zip.open('R1_fastqc/fastqc_data.txt') as txt:
             byte_content = txt.readlines()
-            content = [line.decode('utf-8') for line in byte_content]
-            total_r1_reads.append(content[6].rsplit('\t')[1].strip())
-            for line in content:
-                if 'Total Deduplicated Percentage' in line:
-                    dedup_r1_rates.append(line.rsplit('\t')[1].strip())
-                    break
+            #content = [line.decode('utf-8') for line in byte_content]
+            total_line = byte_content[6].decode('utf-8')            
+            dup_line = byte_content[307].decode('utf-8')
+            #total_r1_reads.append(content[6].rsplit('\t')[1].strip())
+            total_r1_reads.append(total_line.rsplit('\t')[1].strip())           
+            #for line in content:
+            #    if 'Total Deduplicated Percentage' in line:
+            #        dedup_r1_rates.append(line.rsplit('\t')[1].strip())
+            #        break
+            dedup_r1_rates.append(dup_line.rsplit('\t')[1].strip())
     r2_file = tar.extractfile(r2_filename)
     with zipfile.ZipFile(r2_file, 'r') as zip:
         with zip.open('R2_fastqc/fastqc_data.txt') as txt:
             byte_content = txt.readlines()
-            content = [line.decode('utf-8') for line in byte_content]
-            total_r2_reads.append(content[6].rsplit('\t')[1].strip())
-            for line in content:
-                if 'Total Deduplicated Percentage' in line:
-                    dedup_r2_rates.append(line.rsplit('\t')[1].strip())
-                    break
+            #content = [line.decode('utf-8') for line in byte_content]
+            total_line = byte_content[6].decode('utf-8')            
+            dup_line = byte_content[307].decode('utf-8')
+            #total_r2_reads.append(content[6].rsplit('\t')[1].strip())
+            total_r2_reads.append(total_line.rsplit('\t')[1].strip())           
+            #for line in content:
+            #    if 'Total Deduplicated Percentage' in line:
+            #        dedup_r2_rates.append(line.rsplit('\t')[1].strip())
+            #        break
+            dedup_r2_rates.append(dup_line.rsplit('\t')[1].strip())
     star_file = tar.extractfile(star_filename)
     byte_content = star_file.readlines()
     content = [line.decode('utf-8') for line in byte_content]
