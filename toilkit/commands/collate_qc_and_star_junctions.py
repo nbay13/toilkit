@@ -40,13 +40,12 @@ toil_ids = []
 
 def write_star(files, tar, i):
     global anno_dict, toil_ids, output_path
-    junction_filename = list(filter(lambda x: re.search('SJ.out.tab', x), files))[0]
+    junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
     file = tar.extractfile(junction_filename)
     lines = file.readlines()
     print('...Writing STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
-    with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'w') as output:
-        for line in lines:
-            output.write(bytes.decode(line))
+    with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as output:
+            output.writelines(lines)
 
 '''
 Unzips r1 and r2 fastqc files and extracts total reads, dedup reads , etc
