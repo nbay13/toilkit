@@ -99,13 +99,12 @@ def prepare_read_fastqc(files, tar):
             dedup_r2_rates.append(dup_line.rsplit('\t')[1].strip())
     star_file = tar.extractfile(star_filename)
     byte_content = star_file.readlines()
-    content = [line.decode('utf-8') for line in byte_content]
-
-    mapping_rate.append(content[9].rsplit('\t')[1].rstrip()[:-1])
-    map_read_length.append(content[10].rsplit('\t')[1].rstrip())
-    multi_map_rate.append(content[24].rsplit('\t')[1].rstrip()[:-1])
-    unmap_mismatch_rate.append(content[28].rsplit('\t')[1].rstrip()[:-1])
-    unmap_short_rate.append(content[29].rsplit('\t')[1].rstrip()[:-1])
+    #content = [line.decode('utf-8') for line in byte_content]
+    mapping_rate.append(byte_content[9].decode('utf-8').rsplit('\t')[1].rstrip()[:-1])
+    map_read_length.append(byte_content[10].decode('utf-8').rsplit('\t')[1].rstrip())
+    multi_map_rate.append(byte_content[24].decode('utf-8').rsplit('\t')[1].rstrip()[:-1])
+    unmap_mismatch_rate.append(byte_content[28].decode('utf-8').rsplit('\t')[1].rstrip()[:-1])
+    unmap_short_rate.append(byte_content[29].decode('utf-8').rsplit('\t')[1].rstrip()[:-1])
 
 def collate_qc_and_star_junctions(args):
     global prefix, anno_filename, bam_qc, input_path, output_path, anno_dict, toil_ids, avail_reads
