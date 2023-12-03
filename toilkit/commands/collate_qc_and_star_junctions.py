@@ -149,11 +149,11 @@ def collate_qc_and_star_junctions(args):
         df = pd.DataFrame({'UUID': toil_ids, 'Total R1 reads': total_r1_reads, 'Total R2 reads': total_r2_reads,
                            'Duplication R1 rate': np.round(100 - np.array(dedup_r1_rates, dtype='float'), 2),
                            'Duplication R2 rate': np.round(100 - np.array(dedup_r2_rates, dtype='float'), 2),
-                           'Mapping rate': np.round(np.array(mapping_rate, dtype='float'), 2),
+                           'Mapping rate': np.round(np.array(mapping_rate[:-1], dtype='float'), 2),
                            'Avg mapped read length': np.array(map_read_length, dtype='float'),
-                           'Multi-mapping rate': np.round(np.array(multi_map_rate, dtype='float'), 2),
-                           'Unmapped rate (short)': np.round(np.array(unmap_short_rate, dtype='float'), 2),
-                           'Unmapped rate (mismatch)': np.round(np.array(unmap_mismatch_rate, dtype='float'), 2),
+                           'Multi-mapping rate': np.round(np.array(multi_map_rate[:-1], dtype='float'), 2),
+                           'Unmapped rate (short)': np.round(np.array(unmap_short_rate[:-1], dtype='float'), 2),
+                           'Unmapped rate (mismatch)': np.round(np.array(unmap_mismatch_rate[:-1], dtype='float'), 2),
                            'Total Mapped Dedup reads': avail_reads})
         df['Sample'] = [anno_dict[id] for id in toil_ids]
         df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate',
@@ -163,11 +163,11 @@ def collate_qc_and_star_junctions(args):
         df = pd.DataFrame({'UUID': toil_ids, 'Total R1 reads': total_r1_reads, 'Total R2 reads': total_r2_reads,
                            'Duplication R1 rate': np.round(100 - np.array(dedup_r1_rates, dtype='float'), 2),
                            'Duplication R2 rate': np.round(100 - np.array(dedup_r2_rates, dtype='float'), 2),
-                           'Mapping rate': np.round(np.array(mapping_rate, dtype='float'), 2),
+                           'Mapping rate': np.round(np.array(mapping_rate[:-1], dtype='float'), 2),
                            'Avg mapped read length': np.array(map_read_length, dtype='float'),
-                           'Multi-mapping rate': np.round(np.array(multi_map_rate, dtype='float'), 2),
-                           'Unmapped rate (short)': np.round(np.array(unmap_short_rate, dtype='float'), 2),
-                           'Unmapped rate (mismatch)': np.round(np.array(unmap_mismatch_rate, dtype='float'), 2)})
+                           'Multi-mapping rate': np.round(np.array(multi_map_rate[:-1], dtype='float'), 2),
+                           'Unmapped rate (short)': np.round(np.array(unmap_short_rate[:-1], dtype='float'), 2),
+                           'Unmapped rate (mismatch)': np.round(np.array(unmap_mismatch_rate[:-1], dtype='float'), 2)})
         df['Sample'] = [anno_dict[id] for id in toil_ids]
         df = df[['UUID', 'Sample', 'Total R1 reads', 'Total R2 reads', 'Duplication R1 rate', 'Duplication R2 rate',
                  'Mapping rate', 'Avg mapped read length', 'Multi-mapping rate', 'Unmapped rate (short)', 'Unmapped rate (mismatch)']]
