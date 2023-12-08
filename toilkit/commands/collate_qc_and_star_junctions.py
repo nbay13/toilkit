@@ -43,17 +43,26 @@ import shutil
 def write_star(files, tar, i):
     global anno_dict, toil_ids, output_path
     junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
-    print('...Copying STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
+    file = tar.extractfile(junction_filename)
+    lines = file.readlines()
+    print('...Writing STAR junction file to: %s' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
+    with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as output:
+            output.writelines(lines)
+
+def write_star_v2(files, tar, i):
+    global anno_dict, toil_ids, output_path
+    junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
+    print('...(v2)Copying STAR junction file to: %s' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
     with tar.extractfile(junction_filename) as src, open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as dst:
         shutil.copyfileobj(src, dst)
 
 #try this one too, uses tar.extract instead of extractfile
-# def write_star_v2(files, tar, i):
-#     global anno_dict, toil_ids, output_path
-#     junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
-#     print('...Copying STAR junction file to: %s\n' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
-#     with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as dst:
-#         tar.extract(junction_filename, dst)
+def write_star_v3(files, tar, i):
+    global anno_dict, toil_ids, output_path
+    junction_filename = next(filter(lambda x: re.search('SJ.out.tab', x), files))
+    print('...(v3)Copying STAR junction file to: %s' % ('.'.join([anno_dict[toil_ids[i]], 'SJ.out.tab'])))
+    with open('%s%s.SJ.out.tab' % (output_path, anno_dict[toil_ids[i]]), 'wb') as dst:
+        tar.extract(junction_filename, dst)
 
 
 '''
@@ -76,7 +85,7 @@ def prepare_read_fastqc(files, tar):
         data = csv.reader(text_file, delimiter='\t')
         header = next(data)
         avail_reads.append(next(data)[1])
-
+    print('...Reading FastQC data files')
     r1_file = tar.extractfile(r1_filename)
     with zipfile.ZipFile(r1_file, 'r') as zip:
         with zip.open('R1_fastqc/fastqc_data.txt') as txt:
@@ -105,6 +114,7 @@ def prepare_read_fastqc(files, tar):
             #        dedup_r2_rates.append(line.rsplit('\t')[1].strip())
             #        break
             dedup_r2_rates.append(dup_line.rsplit('\t')[1].strip())
+    print('...Reading STAR QC data file')    
     star_file = tar.extractfile(star_filename)
     byte_content = star_file.readlines()
     #content = [line.decode('utf-8') for line in byte_content]
@@ -146,14 +156,20 @@ def collate_qc_and_star_junctions(args):
     folders = glob.glob(input_path + 'UUID_[0-9]*.tar.gz')
     toil_ids = [os.path.basename(dir).rsplit('.')[0] for dir in folders]
     # checks if all folders are in annotation file
-    if any([id not in anno_dict.keys() for id in toil_ids]):
-        sys.exit("Error: Missing UUID annotations")
+    # removing for now, testing on smaller set of samples
+    #if any([id not in anno_dict.keys() for id in toil_ids]):
+    #    sys.exit("Error: Missing UUID annotations")
     # checks if all UUIDs in annotation file have a corresponding folder
     if any([id not in toil_ids for id in anno_dict.keys()]):
         sys.exit("Error: Missing UUID folders")
 
+    # filters folder list to only those listed in annotation txt file
+    inds = [id in anno_dict.keys() for id in toil_ids]
+    toil_ids = [id for id, bool in zip(toil_ids, inds) if bool]
+    folders = [f for f, bool in zip(folders, inds) if bool]
+
     for i, dir in enumerate(folders):
-        print('...Accessing %s (%d/%d)' % (dir, i + 1, len(toil_ids)))
+        print('\nAccessing %s (%d/%d)' % (dir, i + 1, len(toil_ids)))
         with tarfile.open(dir) as tar:
             files = tar.getnames()
             write_star(files, tar, i)
