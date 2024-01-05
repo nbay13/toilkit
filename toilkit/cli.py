@@ -7,10 +7,10 @@ from .commands.make_manifest import make_manifest
 from .commands.manifest_2_anno_v2 import manifest_to_anno
 from .commands.cut_manifest import cut_manifest
 from .commands.gather_bbseal_metrics import gather_bbseal_metrics
-from .commands.collate_qc_and_star_junctions import collate_qc_and_star_junctions, write_star, prepare_read_fastqc
+# from .commands.reference_py_files.collate_qc_and_star_junctions import collate_qc_and_star_junctions
 from .commands.rename_toil_output import rename_toil_output
 from .commands.batch_rename_TOIL_FAIL import batch_rename_TOIL_FAIL
-from .commands.to_uuid_parser import to_uuid_parser
+from .commands.process_uuid_tars import process_uuid_tars
 
 def main():
     parser = argparse.ArgumentParser(prog='toilkit')
@@ -69,20 +69,6 @@ def main():
     parser_gather_bbseal_metrics.add_argument('--outfile', help='The prefix of the output file', default='Nathanson-batch-14')
     parser_gather_bbseal_metrics.set_defaults(func=gather_bbseal_metrics)
 
-    # Add subcommand for collate_qc_and_star_junctions
-    parser_collate_qc_and_star_junctions = subparsers.add_parser('collate_qc_and_star_junctions')
-    parser_collate_qc_and_star_junctions.add_argument('--prefix', help='The annotation file name prefix', nargs = '?',
-                                                      default='Nathanson_batch16')
-    parser_collate_qc_and_star_junctions.add_argument('--anno_filename', nargs = '?', help='The annotation file',
-                                                      default='annotation.tmp.txt')
-    #parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
-    #parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
-    parser_collate_qc_and_star_junctions.add_argument('--indir', help='The input path of annotation data', nargs = '?', default='.')
-    parser_collate_qc_and_star_junctions.add_argument('--star_output',
-                                                      help='The output path of where to put the star junctions data',
-                                                      default='junctions/', nargs = '?')
-    parser_collate_qc_and_star_junctions.set_defaults(bamqc=True, func = collate_qc_and_star_junctions)
-
     # Add subcommand for rename_toil_output
     parser_rename_toil_output = subparsers.add_parser('rename_toil_output')
     parser_rename_toil_output.add_argument('--infile', type=str, help='Path to the input file')
@@ -91,17 +77,35 @@ def main():
 
     #Add subcommand for batch_rename_TOIL_FAIL
     parser_batch_rename_TOIL_FAIL = subparsers.add_parser('batch_rename_TOIL_FAIL')
-    parser_batch_rename_TOIL_FAIL.add_argument('--dir', nargs = '?', default = '.', help='The directory containing the files to rename')
+    parser_batch_rename_TOIL_FAIL.add_argument('--indir', nargs = '?', default = '.', help='The directory containing the files to rename')
     parser_batch_rename_TOIL_FAIL.set_defaults(func=batch_rename_TOIL_FAIL)
 
     #Add subcommand for 2uuid_parser
-    parser_2uuid_parser = subparsers.add_parser('to_uuid_parser')
-    parser_2uuid_parser.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
-    parser_2uuid_parser.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
-    parser_2uuid_parser.add_argument('--min_id', nargs = '?', help = 'the minimum UUID value', default = 0)
-    parser_2uuid_parser.add_argument('--input_dir', nargs = '?', help='The input path of annotation data', default = '.')
-    parser_2uuid_parser.set_defaults(func=to_uuid_parser)
-
+    parser_process_uuid_tars = subparsers.add_parser('process_uuid_tars')
+    parser_process_uuid_tars.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
+    parser_process_uuid_tars.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
+    parser_process_uuid_tars.add_argument('--indir', nargs = '?', help='The input path of annotation data', default = '.')
+    parser_process_uuid_tars.add_argument('--omit_rsem', nargs= '?', action='store_true', help='Include this flag to omit rsem')
+    parser_process_uuid_tars.add_argument('--omit_bamqc', nargs= '?', action='store_true', help='Include this flag to omit bamqc')
+    parser_process_uuid_tars.add_argument('--omit_collate_qc', nargs= '?', action='store_true', help='Include this flag to omit QC')
+    parser_process_uuid_tars.add_argument('--omit_star_junctions', nargs= '?', action='store_true', help='Include this flag to omit star junctions')
+    parser_process_uuid_tars.add_argument('--star_output',
+                                                       help='The output path of where to put the star junctions data',
+                                                       default='junctions/', nargs = '?')
+    parser_process_uuid_tars.set_defaults(func=process_uuid_tars)
+# # Add subcommand for collate_qc_and_star_junctions
+#     parser_collate_qc_and_star_junctions = subparsers.add_parser('collate_qc_and_star_junctions')
+#     parser_collate_qc_and_star_junctions.add_argument('--prefix', help='The annotation file name prefix', nargs = '?',
+#                                                       default='Nathanson_batch16')
+#     parser_collate_qc_and_star_junctions.add_argument('--anno_filename', nargs = '?', help='The annotation file',
+#                                                       default='annotation.tmp.txt')
+#     #parser_collate_qc_and_star_junctions.add_argument('yes', dest='bamqc', action='store_true')
+#     #parser_collate_qc_and_star_junctions.add_argument('no', dest='bamqc', action='store_false')
+#     parser_collate_qc_and_star_junctions.add_argument('--indir', help='The input path of annotation data', nargs = '?', default='.')
+#     parser_collate_qc_and_star_junctions.add_argument('--star_output',
+#                                                       help='The output path of where to put the star junctions data',
+#                                                       default='junctions/', nargs = '?')
+#     parser_collate_qc_and_star_junctions.set_defaults(bamqc=True, func = collate_qc_and_star_junctions)
     args = parser.parse_args()
     args.func(args)
 

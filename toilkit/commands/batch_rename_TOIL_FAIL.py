@@ -29,18 +29,18 @@ def re_archive_and_rename(input_dir, output_dir, uuid):
     return output_file
 
 def batch_rename_TOIL_FAIL(args):
-    renamed_dir = os.path.join(args.dir, "renamed")
+    renamed_dir = os.path.join(args.indir, "renamed")
     os.makedirs(renamed_dir, exist_ok=True)
 
-    for file in os.listdir(args.dir):
-        file_path = os.path.join(args.dir, file)
+    for file in os.listdir(args.indir):
+        file_path = os.path.join(args.indir, file)
 
         if file.startswith("FAIL.") and file.endswith(".tar.gz"):
             print(f"Processing file: {file}")
 
             try:
-                extracted_dir, uuid = extract_and_rename(file_path, args.dir)
-                new_archive_file = re_archive_and_rename(extracted_dir, args.dir, uuid)
+                extracted_dir, uuid = extract_and_rename(file_path, args.indir)
+                new_archive_file = re_archive_and_rename(extracted_dir, args.indir, uuid)
 
                 # Clean up
                 shutil.rmtree(extracted_dir)
