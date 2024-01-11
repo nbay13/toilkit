@@ -20,12 +20,12 @@ def process_uuid_tars(args):
     """
     # Global dictionaries to accumulate data
     rsem_dict = {
-        'rsem_genes_raw_dict': defaultdict(list),
-        'rsem_genes_tpm_dict': defaultdict(list),
-        'rsem_transcripts_hugo_raw_dict': defaultdict(list),
-        'rsem_transcripts_hugo_tpm_dict': defaultdict(list),
-        'rsem_transcripts_raw_dict': defaultdict(list),
-        'rsem_transcripts_tpm_dict': defaultdict(list)
+        'genes_raw': defaultdict(list),
+        'genes_tpm': defaultdict(list),
+        'transcripts_hugo_raw': defaultdict(list),
+        'transcripts_hugo_tpm': defaultdict(list),
+        'transcripts_raw': defaultdict(list),
+        'transcripts_tpm': defaultdict(list)
     }
     collate_qc_dict = {
         'avail_reads': [],
@@ -63,14 +63,13 @@ def process_uuid_tars(args):
         Returns:
             tar folder object (tar.TarFile)
         """
-        with tarfile.open(tar_filename) as tar:
-            return tar
+        return tarfile.open(tar_filename)
 
     def check_missing_invalids():
         nonlocal anno_dict, min_id
         folders = glob.glob(os.path.join(input_path, 'UUID_[0-9]*.tar.gz'))
         toil_ids = [os.path.basename(directory).rsplit('.')[0] for directory in folders]
-        min_id = min(toil_ids)
+        min_id = min([int(toil_id[5:]) for toil_id in toil_ids])
 
         if any(toil_id not in anno_dict for toil_id in toil_ids):
             sys.exit("Error: Missing UUID annotations")
@@ -102,10 +101,10 @@ def process_uuid_tars(args):
         targz = open_tar_gz_for_extraction(file_name)
         files = targz.getnames()
 
-        if not args.omit_counts:
-            add_sample_to_header(heading, rsem_dict['rsem_genes_raw_dict'], rsem_dict['genes_tpm'])
-            add_sample_to_header(heading, rsem_dict['rsem_transcripts_hugo_raw_dict'], rsem_dict['transcripts_hugo_tpm'])
-            add_sample_to_header(heading, rsem_dict['rsem_transcripts_raw_dict'], rsem_dict['transcripts_tpm'])
+        if not args.omit_rsem:
+            add_sample_to_header(heading, rsem_dict['genes_raw'], rsem_dict['genes_tpm'])
+            add_sample_to_header(heading, rsem_dict['transcripts_hugo_raw'], rsem_dict['transcripts_hugo_tpm'])
+            add_sample_to_header(heading, rsem_dict['transcripts_raw'], rsem_dict['transcripts_tpm'])
             # Extract gene and transcript information
             extract_specific_counts_results(targz, str(uuid_num), 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes', rsem_dict, gene_lists, min_id)
             extract_specific_counts_results(targz, str(uuid_num), 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo', rsem_dict, gene_lists, min_id)
@@ -116,9 +115,10 @@ def process_uuid_tars(args):
 
         if not args.omit_star_junctions:
             write_star(files, targz, heading, star_output_path)
-
+        targz.close()
         
-    if not args.omit_counts:
+    if not args.omit_rsem:
+        print("\nWriting RSEM tsvs...")
         write_rsem(os.path.join(input_path, f"{prefix}_rsem_genes_raw_counts.txt"), rsem_dict['genes_raw'])
         write_rsem(os.path.join(input_path, f"{prefix}_rsem_genes_tpm_counts.txt"), rsem_dict['genes_tpm'])
         write_rsem(os.path.join(input_path, f"{prefix}_rsem_transcripts_hugo_raw_counts.txt"), rsem_dict['transcripts_hugo_raw'])
@@ -127,4 +127,6 @@ def process_uuid_tars(args):
         write_rsem(os.path.join(input_path,f"{prefix}_rsem_transcripts_tpm_counts.txt"), rsem_dict['transcripts_tpm'])
 
     if not args.omit_collate_qc:
-        write_qc(collate_qc_dict, toil_ids, [anno_dict[id] for id in toil_ids], input_path, prefix)
+        write_qc(collate_qc_dict, bamqc, [anno_dict[id] for id in toil_ids], toil_ids, prefix, input_path)
+
+    print(f"\nDone! Files can be found in {input_path}")

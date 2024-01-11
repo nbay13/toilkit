@@ -119,9 +119,10 @@ def write_qc(collate_qc_dict: defaultdict, bamqc: bool, sample_names: list, toil
     None
     """
     print("\nArranging final QC data table with proper sample names")
+    path = os.path.join(output_path, prefix + "_Toil_qc_data.tsv")
     df = create_qc_dataframe(collate_qc_dict, bamqc, sample_names, toil_ids)
-    df.to_csv(prefix + "_Toil_qc_data.tsv", sep='\t', index=False)
-    print("\nDone! TOIL QC data written as .tsv to " + os.getcwd() + '\n')
+    df.to_csv(path, sep='\t', index=False)
+    print("\nDone! TOIL QC data written to " + path + '\n')
 
     print("All Done! Renamed SJ.out.tab files can be found at: %s" % (output_path))
 

@@ -85,10 +85,10 @@ def main():
     parser_process_uuid_tars.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
     parser_process_uuid_tars.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
     parser_process_uuid_tars.add_argument('--indir', nargs = '?', help='The input path of annotation data', default = '.')
-    parser_process_uuid_tars.add_argument('--omit_rsem', nargs= '?', action='store_true', help='Include this flag to omit rsem')
-    parser_process_uuid_tars.add_argument('--omit_bamqc', nargs= '?', action='store_true', help='Include this flag to omit bamqc')
-    parser_process_uuid_tars.add_argument('--omit_collate_qc', nargs= '?', action='store_true', help='Include this flag to omit QC')
-    parser_process_uuid_tars.add_argument('--omit_star_junctions', nargs= '?', action='store_true', help='Include this flag to omit star junctions')
+    parser_process_uuid_tars.add_argument('--omit_rsem', action='store_true', help='Include this flag to omit rsem')
+    parser_process_uuid_tars.add_argument('--omit_bamqc', action='store_true', help='Include this flag to omit bamqc')
+    parser_process_uuid_tars.add_argument('--omit_collate_qc', action='store_true', help='Include this flag to omit QC')
+    parser_process_uuid_tars.add_argument('--omit_star_junctions', action='store_true', help='Include this flag to omit star junctions')
     parser_process_uuid_tars.add_argument('--star_output',
                                                        help='The output path of where to put the star junctions data',
                                                        default='junctions/', nargs = '?')
