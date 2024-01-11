@@ -144,7 +144,7 @@ def collate_qc_and_star_junctions(args):
         print("\nCreating output folder: %s" % (output_path))
         os.mkdir(output_path)
 
-    print("\nCollating TOIL QC and gathering STAR junction data with " + anno_filename + "\n")
+    print("\nCollating TOIL QC and gathering STAR junction data with " + anno_filename)
     anno_dict = {}
     with open(anno_filename, "r") as anno:
         header = next(anno)
