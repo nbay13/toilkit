@@ -53,7 +53,7 @@ def main():
     # Add subcommand for manifest_to_anno
     parser_manifest_to_anno = subparsers.add_parser('manifest_to_anno')
     parser_manifest_to_anno.add_argument('--infile', help='The input manifest file')
-    parser_manifest_to_anno.add_argument('--outfile', help='The output annotation file', default = 'idkey.txt')
+    parser_manifest_to_anno.add_argument('--outfile', nargs='?', help='The output annotation file', default = 'idkey.txt')
     parser_manifest_to_anno.set_defaults(func=manifest_to_anno)
 
     # Add subcommand for cut_manifest
@@ -64,15 +64,15 @@ def main():
 
     # Add subcommand for gather_bbseal_metrics
     parser_gather_bbseal_metrics = subparsers.add_parser('gather_bbseal_metrics')
-    parser_gather_bbseal_metrics.add_argument('--dir', help='The directory of the bbseal results',
-                        default=' /media/graeberlab/My\ Book/RNA\ Batch\ 14/')
-    parser_gather_bbseal_metrics.add_argument('--outfile', help='The prefix of the output file', default='Nathanson-batch-14')
+    parser_gather_bbseal_metrics.add_argument('--dir', nargs='?', help='The directory of the bbseal results',
+                        default='.')
+    parser_gather_bbseal_metrics.add_argument('--outfile', nargs='?', help='The prefix of the output file', default='toilkit-bbseal')
     parser_gather_bbseal_metrics.set_defaults(func=gather_bbseal_metrics)
 
     # Add subcommand for rename_toil_output
     parser_rename_toil_output = subparsers.add_parser('rename_toil_output')
-    parser_rename_toil_output.add_argument('--infile', type=str, help='Path to the input file')
-    parser_rename_toil_output.add_argument('--direction', type=str, help='Direction of renaming (1 or 2)')
+    parser_rename_toil_output.add_argument('--infile', nargs='?', type=str, help='Path to the input file', default='.')
+    parser_rename_toil_output.add_argument('--direction', nargs='?', type=str, help='Direction of renaming (1 or 2)', default='1')
     parser_rename_toil_output.set_defaults(func=rename_toil_output)
 
     #Add subcommand for batch_rename_TOIL_FAIL
@@ -82,8 +82,8 @@ def main():
 
     #Add subcommand for 2uuid_parser
     parser_process_uuid_tars = subparsers.add_parser('process_uuid_tars')
-    parser_process_uuid_tars.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
-    parser_process_uuid_tars.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
+    parser_process_uuid_tars.add_argument('--prefix', nargs = '?', help='The output filenames prefix', default = 'toilkit-output')
+    parser_process_uuid_tars.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'idkey.txt')
     parser_process_uuid_tars.add_argument('--indir', nargs = '?', help='The input path of annotation data', default = '.')
     parser_process_uuid_tars.add_argument('--omit_rsem', action='store_true', help='Include this flag to omit rsem')
     parser_process_uuid_tars.add_argument('--omit_bamqc', action='store_true', help='Include this flag to omit bamqc')
