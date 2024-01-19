@@ -44,7 +44,7 @@ def main():
     # Add subcommand for make_manifest
     parser_make_manifest = subparsers.add_parser('make_manifest')
     parser_make_manifest.add_argument('--dir', nargs='?', help="The working directory", default= '.')
-    parser_make_manifest.add_argument('--tdir', help="The target directory of the fastqs")
+    parser_make_manifest.add_argument('--tdir', nargs= '?', help="The target directory of the fastqs")
     parser_make_manifest.add_argument('--suffix', nargs='?', default='.tsv', help="The suffix of the manifest file (ex. nathanson-15-1.tsv)")
     parser_make_manifest.add_argument('--starting_num', nargs='?', default=0, type=int,
                         help="a number for each pair of fastq files listed in the manifest file")
@@ -64,9 +64,9 @@ def main():
 
     # Add subcommand for gather_bbseal_metrics
     parser_gather_bbseal_metrics = subparsers.add_parser('gather_bbseal_metrics')
-    parser_gather_bbseal_metrics.add_argument('--dir', help='The directory of the bbseal results',
-                        default=' /media/graeberlab/My\ Book/RNA\ Batch\ 14/')
-    parser_gather_bbseal_metrics.add_argument('--outfile', help='The prefix of the output file', default='Nathanson-batch-14')
+    parser_gather_bbseal_metrics.add_argument('--dir', nargs='?', help='The directory of the bbseal results',
+                        default='.')
+    parser_gather_bbseal_metrics.add_argument('--outfile', nargs='?', help='The prefix of the output file', default='toilkit-bbseal')
     parser_gather_bbseal_metrics.set_defaults(func=gather_bbseal_metrics)
 
     # Add subcommand for rename_toil_output
@@ -82,8 +82,8 @@ def main():
 
     #Add subcommand for 2uuid_parser
     parser_process_uuid_tars = subparsers.add_parser('process_uuid_tars')
-    parser_process_uuid_tars.add_argument('--prefix', nargs = '?', help='The annotation file name prefix', default = 'LTa_xenograft')
-    parser_process_uuid_tars.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'annotation.tmp.txt')
+    parser_process_uuid_tars.add_argument('--prefix', nargs = '?', help='The output filenames prefix', default = 'toilkit-output')
+    parser_process_uuid_tars.add_argument('--anno_filename', nargs = '?', help='The annotation file', default = 'idkey.txt')
     parser_process_uuid_tars.add_argument('--indir', nargs = '?', help='The input path of annotation data', default = '.')
     parser_process_uuid_tars.add_argument('--omit_rsem', action='store_true', help='Include this flag to omit rsem')
     parser_process_uuid_tars.add_argument('--omit_bamqc', action='store_true', help='Include this flag to omit bamqc')
