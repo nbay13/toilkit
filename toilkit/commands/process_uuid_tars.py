@@ -5,7 +5,7 @@ import sys
 from collections import defaultdict, OrderedDict
 from tqdm import tqdm
 from toilkit.commands.process_uuid_tars_utilities.rsem_data import add_sample_to_header, extract_specific_counts_results, write_rsem
-from toilkit.commands.process_uuid_tars_utilities.star_junctions import write_star, write_star_v2, write_star_v3
+from toilkit.commands.process_uuid_tars_utilities.star_junctions import write_star
 from toilkit.commands.process_uuid_tars_utilities.collate_qc import write_qc, prepare_read_fastqc
 
 def process_uuid_tars(args):

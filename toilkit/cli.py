@@ -52,14 +52,14 @@ def main():
 
     # Add subcommand for manifest_to_anno
     parser_manifest_to_anno = subparsers.add_parser('manifest_to_anno')
-    parser_manifest_to_anno.add_argument('--infile', help='The input manifest file')
+    parser_manifest_to_anno.add_argument('--infile', required=True, help='The input manifest file')
     parser_manifest_to_anno.add_argument('--outfile', help='The output annotation file', default = 'idkey.txt')
     parser_manifest_to_anno.set_defaults(func=manifest_to_anno)
 
     # Add subcommand for cut_manifest
     parser_cut_manifest = subparsers.add_parser('cut_manifest')
-    parser_cut_manifest.add_argument('--manifest_file', help='Manifest File to split')
-    parser_cut_manifest.add_argument('--split_num', type=int, help='Number of lines per split file')
+    parser_cut_manifest.add_argument('--manifest_file', required=True, help='Manifest File to split')
+    parser_cut_manifest.add_argument('--split_num', type=int, required=True, help='Number of lines per split file')
     parser_cut_manifest.set_defaults(func=cut_manifest)
 
     # Add subcommand for gather_bbseal_metrics
@@ -71,8 +71,8 @@ def main():
 
     # Add subcommand for rename_toil_output
     parser_rename_toil_output = subparsers.add_parser('rename_toil_output')
-    parser_rename_toil_output.add_argument('--infile', type=str, help='Path to the input file')
-    parser_rename_toil_output.add_argument('--direction', type=str, help='Direction of renaming (1 or 2)')
+    parser_rename_toil_output.add_argument('--infile', type=str, help='Path to the input txt file')
+    parser_rename_toil_output.add_argument('--direction', type=int, choices=[1, 2], help='Direction of renaming (1 or 2)', default = 1)
     parser_rename_toil_output.set_defaults(func=rename_toil_output)
 
     #Add subcommand for batch_rename_TOIL_FAIL
