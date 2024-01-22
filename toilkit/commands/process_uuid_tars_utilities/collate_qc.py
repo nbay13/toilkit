@@ -97,7 +97,7 @@ def create_qc_dataframe(collate_qc_dict, bamqc, sample_names, toil_ids):
 
     if bamqc:
         qc_data['Total Mapped Dedup reads'] = collate_qc_dict['avail_reads']
-
+        qc_columns.append('Total Mapped Dedup reads')
     qc_data['Sample'] = sample_names
 
     df = pd.DataFrame(qc_data)
