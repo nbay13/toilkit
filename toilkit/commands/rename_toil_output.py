@@ -22,7 +22,7 @@ def rename_toil_output(args):
             new_tar_gz = os.path.join(input_dir, new + ".tar.gz")
             orig_bam = os.path.join(input_dir, orig + ".sortedByCoord.md.bam")
             new_bam = os.path.join(input_dir, new + ".sortedByCoord.md.bam")
-            
+
             if os.path.exists(orig_tar_gz):
                 rename_tar(orig_tar_gz, new_tar_gz, input_dir, orig, new)
             if os.path.exists(orig_bam):
@@ -37,11 +37,11 @@ def rename_tar(orig_tar_gz: str, new_tar_gz: str, input_dir: str, orig, new):
         tar.extractall(input_dir)
 
     # Rename extracted folder
-    os.rename(orig, new)
+    os.rename(os.path.join(input_dir, orig), os.path.join(input_dir, new))
 
     # Create new tar.gz from the renamed folder
     with tarfile.open(new_tar_gz, 'w:gz') as tar:
-        tar.add(new, arcname=os.path.basename(new))
+        tar.add(os.path.join(input_dir,new), arcname=os.path.basename(new))
 
     # Remove the extracted folder
     shutil.rmtree(os.path.join(input_dir, new))
