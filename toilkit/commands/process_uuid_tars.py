@@ -2,6 +2,7 @@ import glob
 import os
 import tarfile
 import sys
+import warnings
 from collections import defaultdict, OrderedDict
 from tqdm import tqdm
 from toilkit.commands.process_uuid_tars_utilities.rsem_data import add_sample_to_header, extract_specific_counts_results, write_rsem
@@ -75,7 +76,7 @@ def process_uuid_tars(args):
             sys.exit("Error: Missing UUID annotations")
 
         if any(toil_id not in toil_ids for toil_id in anno_dict):
-            sys.exit("Error: Missing UUID folders")
+            warnings.warn("Warning: Missing UUID folders based on annotation file, proceeding with matching UUID folders")
             
         return toil_ids, folders
 
