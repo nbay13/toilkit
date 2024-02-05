@@ -38,13 +38,13 @@ def main():
 
     # Add subcommand for cat_bbseal
     parser_cat_bbseal = subparsers.add_parser('cat_bbseal')
-    parser_cat_bbseal.add_argument('--dir', nargs='?', help='The directory containing bbseal results', default = '.')
+    parser_cat_bbseal.add_argument('--dir', nargs='?', help='The directory containing bbseal results', default='.')
     parser_cat_bbseal.set_defaults(func=cat_bbseal)
 
     # Add subcommand for make_manifest
     parser_make_manifest = subparsers.add_parser('make_manifest')
-    parser_make_manifest.add_argument('--dir', nargs='?', help="The working directory", default= '.')
-    parser_make_manifest.add_argument('--tdir', nargs= '?', help="The target directory of the fastqs")
+    parser_make_manifest.add_argument('--dir', nargs='?', help="The working directory", default='.')
+    parser_make_manifest.add_argument('--tdir', nargs= '?', help="The target directory of the fastqs", default='.')
     parser_make_manifest.add_argument('--suffix', nargs='?', default='.tsv', help="The suffix of the manifest file (ex. nathanson-15-1.tsv)")
     parser_make_manifest.add_argument('--starting_num', nargs='?', default=0, type=int,
                         help="a number for each pair of fastq files listed in the manifest file")
