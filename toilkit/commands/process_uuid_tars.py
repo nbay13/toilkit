@@ -96,9 +96,9 @@ def process_uuid_tars(args):
     anno_dict = map_uuid_to_sample_id()
     toil_ids, folders = check_missing_invalids()
 
-    for uuid_num in tqdm(desc="Processing Samples: ", unit="samples", iterable=range(min_id, len(folders))):
-        file_name = os.path.join(input_path, f"UUID_{uuid_num}.tar.gz")
-        heading = anno_dict[f"UUID_{uuid_num}"]
+    for uuid in tqdm(desc="Processing Samples: ", unit="samples", iterable=toil_ids):
+        file_name = os.path.join(input_path, f"{uuid}.tar.gz")
+        heading = anno_dict[f"{uuid}"]
         targz = open_tar_gz_for_extraction(file_name)
         files = targz.getnames()
 
@@ -107,9 +107,9 @@ def process_uuid_tars(args):
             add_sample_to_header(heading, rsem_dict['transcripts_hugo_raw'], rsem_dict['transcripts_hugo_tpm'])
             add_sample_to_header(heading, rsem_dict['transcripts_raw'], rsem_dict['transcripts_tpm'])
             # Extract gene and transcript information
-            extract_specific_counts_results(targz, str(uuid_num), 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes', rsem_dict, gene_lists, min_id)
-            extract_specific_counts_results(targz, str(uuid_num), 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo', rsem_dict, gene_lists, min_id)
-            extract_specific_counts_results(targz, str(uuid_num), 'RSEM/rsem_isoforms.results', 'rsem_transcripts', rsem_dict, gene_lists, min_id)
+            extract_specific_counts_results(targz, uuid, 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes', rsem_dict, gene_lists, min_id)
+            extract_specific_counts_results(targz, uuid, 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo', rsem_dict, gene_lists, min_id)
+            extract_specific_counts_results(targz, uuid, 'RSEM/rsem_isoforms.results', 'rsem_transcripts', rsem_dict, gene_lists, min_id)
 
         if not args.omit_collate_qc:
             prepare_read_fastqc(files, targz, collate_qc_dict, bamqc)
@@ -130,4 +130,4 @@ def process_uuid_tars(args):
     if not args.omit_collate_qc:
         write_qc(collate_qc_dict, bamqc, [anno_dict[id] for id in toil_ids], toil_ids, prefix, input_path)
 
-    print(f"\nDone! Files can be found in {input_path}")
+    print(f"\nDone! Files can be found in {os.path.abspath(input_path)}")

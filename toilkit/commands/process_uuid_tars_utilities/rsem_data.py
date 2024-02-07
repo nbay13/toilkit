@@ -4,13 +4,13 @@ import pandas as pd
 from collections import defaultdict
 from tqdm import tqdm
 
-def extract_specific_counts_results(tar: tarfile.TarFile, uuid_num: str, results_name, infotype: str, rsem_dict: defaultdict, gene_lists, min_id: int):
+def extract_specific_counts_results(tar: tarfile.TarFile, uuid: str, results_name: str, infotype: str, rsem_dict: defaultdict, gene_lists, min_id: int):
         """
         Extract and process results from a specific file inside a tar.gz archive.
 
         Args:
             tar (tarfile.TarFile): The tarfile object.
-            uuid_num (str): UUID associated with the tar.gz file.
+            uuid: UUID associated with the tar.gz file.
             results_name (str): Name of the results file inside the tar.gz archive.
             infotype (str): Type of information being processed.
 
@@ -19,7 +19,7 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid_num: str, results
         """
         gene_list = []
         gene_occurences = {}
-        results_file_path = os.path.normpath(os.path.join(f'UUID_{uuid_num}', results_name)).replace('\\', '/')
+        results_file_path = os.path.normpath(os.path.join(f'{uuid}', results_name)).replace('\\', '/')
         print("\nReading ", results_file_path)
         results_file = tar.extractfile(results_file_path)
         results_file.readline()
@@ -28,8 +28,9 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid_num: str, results
         for gene_entry in tqdm(results_file, desc="Processing genes", unit=' genes'):
             gene_exp_info = bytes.decode(gene_entry).rstrip("\n").split("\t")
             gene_name = gene_exp_info[0]
+            uuid_num = int(uuid[5:])
             
-            if int(uuid_num) == min_id:
+            if uuid_num == min_id:
                 if gene_name not in gene_occurences:
                     gene_occurences[gene_name] = 1
                     gene_list.append(gene_name)
@@ -44,15 +45,15 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid_num: str, results
             tpm_count = gene_exp_info[5]
             # Update the appropriate dictionaries based on infotype
             if infotype == 'rsem_genes':
-                if int(uuid_num) == min_id:
+                if uuid_num == min_id:
                     gene_lists['genes'] = gene_list
                 update_global_dicts(gene_lists['genes'][index], raw_count, tpm_count, rsem_dict['genes_raw'], rsem_dict['genes_tpm'])
             elif infotype == 'rsem_transcripts_hugo':
-                if int(uuid_num) == min_id:
+                if uuid_num == min_id:
                     gene_lists['transcripts_hugo'] = gene_list
                 update_global_dicts(gene_lists['transcripts_hugo'][index], raw_count, tpm_count, rsem_dict['transcripts_hugo_raw'], rsem_dict['transcripts_hugo_tpm'])
             elif infotype == 'rsem_transcripts':
-                if int(uuid_num) == min_id:
+                if uuid_num == min_id:
                     gene_lists['transcripts'] = gene_list
                 update_global_dicts(gene_lists['transcripts'][index], raw_count, tpm_count, rsem_dict['transcripts_raw'], rsem_dict['transcripts_tpm'])
             index += 1
