@@ -1,7 +1,0 @@
-Metadata-Version: 2.1
-Name: toilkit
-Version: 0.1
-Summary: A command-line tool for processing genomic data
-Requires-Dist: numpy
-Requires-Dist: pandas
-Requires-Dist: biopython
