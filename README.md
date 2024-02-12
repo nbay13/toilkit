@@ -1,6 +1,8 @@
 # ToilKit
 
-A set of Python commands for working with inputs to and outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq). Utilizes Python's `subprocess` module to execute subcommands efficiently.
+A set of Python commands for working with inputs to and outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
+
+Utilizes Python's `subprocess` module to execute subcommands efficiently.
 
 Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for use by shared workstations in the Graeber lab @ UCLA. 
 
