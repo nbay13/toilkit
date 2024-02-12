@@ -23,7 +23,7 @@ Handling fastqs:
 (optional) mouse read filtering:
 - `bbseal`: Run bbduk (adapter trimming) and bbseal (dual reference alignment)
 - `bbcat`: Concatenate human and ambiguously-aligned reads into fastqs
-- `gather_bbseal_metrics`: Gather bbseal alignment metrics
+- `bbmetrics`: Gather bbseal alignment metrics
 
 Prep toil-rnaseq manifest:
 - `make-manifest`: Create a toil-rnaseq manifest file
@@ -39,7 +39,7 @@ Handling toil-rnaseq outputs:
 To use a specific subcommand, run `toilkit <subcommand>`. For example:
 
 ```bash
-toilkit fastq_merge --indir <input_directory> --outdir <output_directory>
+toilkit fastq-merge --indir <input_directory> --outdir <output_directory>
 ```
 
 For detailed usage instructions for each subcommand, refer to the documentation or run `toilkit <subcommand> --help`.
