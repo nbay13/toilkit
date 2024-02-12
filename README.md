@@ -31,7 +31,7 @@ Prep toil-rnaseq manifest:
 - `manifest-key`: Convert a manifest file to a sample key tsv file
 
 Handling toil-rnaseq outputs:
-- `toil-fix`: (optional) Batch rename TOIL output files with "_FAIL" suffix caused by bamQC
+- `toil-fix`: Batch rename TOIL output files with "_FAIL" suffix caused by bamQC (optional)
 - `toil-combine`: Extract info from UUID_XX.tar.gz results -- such as RSEM, QC and/or STAR junctions data
 - `toil-rename`: Final rename of all toil-rnaseq output files
 
