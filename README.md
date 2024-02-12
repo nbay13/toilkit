@@ -30,7 +30,7 @@ Handling fastqs:
 Prep toil-rnaseq manifest:
 - `make-manifest`: Create a toil-rnaseq manifest file
 - `cut-manifest`: Split a manifest file into smaller parts
-- `manifest-key`: Convert a manifest file to a sample key tsv file
+- `manifest-key`: Convert a manifest file to a sample key .tsv file
 
 Handling toil-rnaseq outputs:
 - `toil-fix`: Batch rename TOIL output files with "_FAIL" suffix caused by bamQC (optional)
