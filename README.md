@@ -1,6 +1,6 @@
-# TOILkit
+# ToilKit
 
-A set of Python commands for working with inputs to and outputs from the [TOIL RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
+A set of Python commands for working with inputs to and outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
 
 Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for use by shared workstations in the Graeber lab @ UCLA. 
 
@@ -17,24 +17,23 @@ pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
 Toilkit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
 
 Handling fastqs:
-- `fastq_merge`: Merge FASTQ files.
-- `rename_by_key`: Rename files based on a key.
+- `fastq-merge`: Merge fastq files based on sample name
+- `fastq-rename`: Rename fastqs based on key
 
 (optional) mouse read filtering:
-- `bbduk_bbseal`: Run bbduk and bbseal.
-- `cat_bbseal`: Concatenate bbseal output files.
-- `gather_bbseal_metrics`: Gather bbseal metrics.
+- `bbseal`: Run bbduk (adapter trimming) and bbseal (dual reference alignment)
+- `bbcat`: Concatenate human and ambiguously-aligned reads into fastqs
+- `gather_bbseal_metrics`: Gather bbseal alignment metrics
 
 Prep toil-rnaseq manifest:
-- `make_manifest`: Create a manifest file.
-- `manifest_to_anno`: Convert a manifest file to an annotation file.
-- `cut_manifest`: Split a manifest file into smaller parts.
+- `make-manifest`: Create a toil-rnaseq manifest file
+- `cut-manifest`: Split a manifest file into smaller parts
+- `manifest-key`: Convert a manifest file to a sample key tsv file
 
 Handling toil-rnaseq outputs:
-- `batch_rename_TOIL_FAIL`: Batch rename TOIL output files with "_FAIL" suffix.
-- `process_uuid_tars`: Extract info from UUID_X.gz tar files, such as RSEM, QC or STAR junctions data.
-- `rename_toil_output`: Final rename of all TOIL output files.
-
+- `toil-fix`: (optional) Batch rename TOIL output files with "_FAIL" suffix caused by bamQC
+- `toil-combine`: Extract info from UUID_XX.tar.gz results -- such as RSEM, QC and/or STAR junctions data
+- `toil-rename`: Final rename of all toil-rnaseq output files
 
 
 To use a specific subcommand, run `toilkit <subcommand>`. For example:
