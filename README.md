@@ -18,21 +18,21 @@ pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
 
 Toilkit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
 
-Handling fastqs:
+### Handling fastqs:
 - `fastq-merge`: Merge fastq files based on sample name
 - `fastq-rename`: Rename fastqs based on key
 
-(optional) mouse read filtering:
+### (optional) mouse read filtering:
 - `bbseal`: Run bbduk (adapter trimming) and bbseal (dual reference alignment)
 - `bbcat`: Concatenate human and ambiguously-aligned reads into fastqs
 - `bbmetrics`: Gather bbseal alignment metrics
 
-Prep toil-rnaseq manifest:
+### Prep toil-rnaseq manifest:
 - `make-manifest`: Create a toil-rnaseq manifest file
 - `cut-manifest`: Split a manifest file into smaller parts
 - `manifest-key`: Convert a manifest file to a sample key .tsv file
 
-Handling toil-rnaseq outputs:
+### Handling toil-rnaseq outputs:
 - `toil-fix`: Batch rename TOIL output files with "_FAIL" suffix caused by bamQC (optional)
 - `toil-combine`: Extract info from UUID_XX.tar.gz results -- such as RSEM, QC and/or STAR junctions data
 - `toil-rename`: Final rename of all toil-rnaseq output files
