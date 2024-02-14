@@ -33,7 +33,7 @@ Toilkit provides a set of subcommands that can be used from the command line. He
 - `manifest-key`: Convert a manifest file to a sample key .tsv file
 
 ### Handling toil-rnaseq outputs:
-- `toil-fix`: (if bamQC) Batch rename TOIL output files with "_FAIL" suffix caused by bamQC
+- `toil-fix`: (if bamQC enabled) Batch rename TOIL output files with "_FAIL" suffix caused by bamQC
 - `toil-combine`: Extract info from UUID_XX.tar.gz results -- such as RSEM, QC and/or STAR junctions data
 - `toil-rename`: Final rename of all toil-rnaseq output files
 
