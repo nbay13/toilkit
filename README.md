@@ -14,7 +14,7 @@ You can install Toilkit using pip:
 pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
 ```
 
-## Usage
+## Commands
 
 Toilkit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
 
@@ -37,6 +37,7 @@ Toilkit provides a set of subcommands that can be used from the command line. He
 - `toil-combine`: Extract info from UUID_XX.tar.gz results -- such as RSEM, QC and/or STAR junctions data
 - `toil-rename`: Final rename of all toil-rnaseq output files
 
+## Usage
 
 To use a specific subcommand, run `toilkit <subcommand>`. For example:
 
