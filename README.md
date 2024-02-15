@@ -1,5 +1,7 @@
 # Toil-Kit
 
+![alt text](imgs/AI logo.jpg)
+
 A set of Python commands for working with inputs to and outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
 
 Utilizes Python's `subprocess` module to execute subcommands efficiently.
