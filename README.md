@@ -1,14 +1,14 @@
-# ToilKit
+# Toil-Kit
 
 A set of Python commands for working with inputs to and outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
 
 Utilizes Python's `subprocess` module to execute subcommands efficiently.
 
-Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for use by shared workstations in the Graeber lab @ UCLA. 
+Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for shared workstations in the Graeber lab @ UCLA. 
 
 ## Installation
 
-You can install Toilkit using pip:
+You can install Toil-Kit using pip:
 
 ```bash
 pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
@@ -16,7 +16,7 @@ pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
 
 ## Commands
 
-Toilkit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
+Toil-Kit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
 
 ### Handling fastqs:
 - `fastq-merge`: Merge fastq files based on sample name
