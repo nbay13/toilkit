@@ -23,10 +23,9 @@ def bbduk_bbseal(args):
         for p in f.readlines():
             p = p.strip()
             print(f'{p} started at {datetime.datetime.now()}')
-            print(f'ref= {os.path.join(trim_galore_adapter_dir, "trim_galore_adapter.fa")}')
             subprocess.run(
                 [bbduk, f'in1={p}_R1.fastq.gz', f'in2={p}_R2.fastq.gz', f'out1={p}_R1.trim.fq', f'out2={p}_R2.trim.fq',
-                 f'ref= {os.path.join(trim_galore_adapter_dir, "trim_galore_adapter.fa")}', 'ktrim=r', 'k=10', 'mink=7', 'hdist=1', 'tpe', 'tbo'])
+                 f'ref={os.path.join(trim_galore_adapter_dir, "trim_galore_adapter.fa")}', 'ktrim=r', 'k=10', 'mink=7', 'hdist=1', 'tpe', 'tbo'])
             subprocess.run(
                 [bbseal, '-Xmx8192m', f'in={p}_R#.trim.fq', f'pattern={p}_out_%_#.fq.gz', f'outu={p}_unmapped_#.fq.gz', 'ambig=all',
                  f'ref={os.path.join(ref_genome_dir,"gencode.v31.transcripts.fa.gz")}, {os.path.join(ref_genome_dir, "gencode.vM22.transcripts.fa.gz")}',
