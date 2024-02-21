@@ -23,6 +23,7 @@ def bbduk_bbseal(args):
         for p in f.readlines():
             p = p.strip()
             print(f'{p} started at {datetime.datetime.now()}')
+            print(f'ref= {os.path.join(trim_galore_adapter_dir, "trim_galore_adapter.fa")}')
             subprocess.run(
                 [bbduk, f'in1={p}_R1.fastq.gz', f'in2={p}_R2.fastq.gz', f'out1={p}_R1.trim.fq', f'out2={p}_R2.trim.fq',
                  f'ref= {os.path.join(trim_galore_adapter_dir, "trim_galore_adapter.fa")}', 'ktrim=r', 'k=10', 'mink=7', 'hdist=1', 'tpe', 'tbo'])
