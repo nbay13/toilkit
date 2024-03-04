@@ -1,4 +1,4 @@
-# Toil-Kit
+# toilkit
 
 ![](imgs/AI-logo.jpg)
 
@@ -10,7 +10,7 @@ Includes additional commands for dual alignment to human and mouse genome and su
 
 ## Installation
 
-You can install Toil-Kit using pip:
+You can install toilkit using pip:
 
 ```bash
 pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
@@ -18,7 +18,7 @@ pip install -e git+https://github.com/nbay13/toilkit.git#egg=toilkit
 
 ## Commands
 
-Toil-Kit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
+toilkit provides a set of subcommands that can be used from the command line. Here's an overview of the available subcommands:
 
 ### Handling fastqs:
 - `fastq-merge`: Merge fastq files based on sample name
