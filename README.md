@@ -7,6 +7,7 @@ Uses Python's `subprocess` module and command line utilities to execute subcomma
 Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for shared workstations in the Graeber lab @ UCLA. 
 <p align="center">
 <img src="imgs/AI logo.jpg" width="450" height = "300">
+  
 <em>Image courtesy of our AI overlords</em>
 </p>
 
