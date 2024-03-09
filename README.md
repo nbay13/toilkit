@@ -1,7 +1,5 @@
 # toilkit <img src="imgs/toilkit logo-1.png" align="right" />
 
-![](imgs/AI-logo.jpg)
-
 A set of Python commands for preparing inputs to and processing outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
 
 Uses Python's `subprocess` module and command line utilities to execute subcommands efficiently
