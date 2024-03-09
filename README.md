@@ -1,4 +1,4 @@
-# toilkit
+# toilkit - Python commands for the Toil RNA-Seq pipeline <img src="man/figures/toilkit logo-1.png" align="right" />
 
 ![](imgs/AI-logo.jpg)
 
