@@ -8,6 +8,7 @@ Includes additional commands for dual alignment to human and mouse genome and su
 <p align="center">
 <img src="imgs/AI logo.jpg" width="450" height = "300">
 </p>
+
 ## Installation
 
 You can install toilkit using pip:
