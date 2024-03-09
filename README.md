@@ -1,13 +1,13 @@
 # toilkit <img src="imgs/toilkit logo-1.png" align="right" width="150" height="150" />
-<p align="center">
-<img src="imgs/AI logo.jpg" width="400" height = "300">
-</p>
+
 A set of Python commands for preparing inputs to and processing outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
 
 Uses Python's `subprocess` module and command line utilities to execute subcommands efficiently
 
 Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for shared workstations in the Graeber lab @ UCLA. 
-
+<p align="center">
+<img src="imgs/AI logo.jpg" width="400" height = "250">
+</p>
 ## Installation
 
 You can install toilkit using pip:
