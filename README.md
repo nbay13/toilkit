@@ -1,4 +1,4 @@
-# toilkit <img src="imgs/toilkit logo-1.png" align="right" width="100" height="100" />
+# toilkit <img src="imgs/toilkit logo-1.png" align="right" width="150" height="150" />
 
 A set of Python commands for preparing inputs to and processing outputs from the [Toil RNA-Seq pipeline](https://github.com/BD2KGenomics/toil-rnaseq)
 
