@@ -4,7 +4,9 @@ A set of Python commands for preparing inputs to and processing outputs from the
 
 Uses Python's `subprocess` module and command line utilities to execute subcommands efficiently
 
-Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. Pipeline configurations including reference files and directory stuctures designed for shared workstations in the Graeber lab @ UCLA. 
+Includes additional commands for dual alignment to human and mouse genome and subsequent mouse read filtering. 
+
+Pipeline configurations including reference files and directory stuctures designed for shared workstations in the Graeber lab @ UCLA. 
 
 ## Installation
 
