@@ -8,6 +8,9 @@ Includes additional commands for dual alignment to human and mouse genome and su
 <p align="center">
 <img src="imgs/AI logo.jpg" width="450" height = "300" alt="Image courtesy of our AI overlords">
 </p>
+<p align="center">
+    <em>Image courtesy of our AI overlords</em>
+</p>
 
 ## Installation
 
