@@ -84,7 +84,7 @@ nbayley
 24C-003	patientC
 ```
 `fastq-rename` example call
-```console
+```bash
 # make sure the pattern is surrounded by single or double quotes, default is '*.fastq.gz'
 toilkit fastq-rename --dir nbayley/merged_fastqs/  --pattern '*.fastq.gz' --keyname nbayley/example_sample_key.txt
 Directory: nbayley/merged_fastqs/
