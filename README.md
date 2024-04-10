@@ -51,6 +51,4 @@ To use a specific subcommand, run `toilkit <subcommand>`. For example:
 toilkit fastq-merge --indir <input_directory> --outdir <output_directory>
 ```
 
-For detailed usage instructions for each subcommand, refer to the documentation or run `toilkit <subcommand> --help`.
-
-```
+For detailed usage instructions check the [tutorial](https://nbay13.github.io/toilkit/)
