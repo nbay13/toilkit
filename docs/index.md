@@ -25,7 +25,7 @@ nbayley
 
 While it is important to check for lane-specific biases in sequencing data, many tools require a single fastq file per read orientation (e.g. forward R1 and reverse R2 in paired-end sequencing).
 
-```console
+```bash
 # deafult split_char is "_", specified here for completeness
 toilkit fastq-merge --indir nbayley/raw_fastqs/  --outdir nbayley/merged_fastqs/ --split_char _
 24C-001
