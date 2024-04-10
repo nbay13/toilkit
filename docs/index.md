@@ -26,7 +26,7 @@ nbayley
 While it is important to check for lane-specific biases in sequencing data, many tools require a single fastq file per read orientation (e.g. forward R1 and reverse R2 in paired-end sequencing).
 
 ```bash
-# deafult split_char is "_", specified here for completeness
+# default split_char is "_", specified here for completeness
 toilkit fastq-merge --indir nbayley/raw_fastqs/  --outdir nbayley/merged_fastqs/ --split_char _
 24C-001
 24C-002
@@ -34,7 +34,7 @@ toilkit fastq-merge --indir nbayley/raw_fastqs/  --outdir nbayley/merged_fastqs/
 24C-004
 ```
 If you are unsure how to parameterize a command, check the docstrings
-```console
+```bash
 # TODO: add defaults to docstring
 toilkit fastq-merge --help
 
