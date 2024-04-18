@@ -42,7 +42,7 @@ def rename_by_key(args):
   new_ids = [d[id] for id in ids]
   suffixes = [split_char.join(filename.split(split_char)[1:]) for filename in filenames]
   # add original filename suffixes to dict values in the list
-  new_filenames = ['_'.join((new_id, suffix)) for new_id, suffix in zip(new_ids, suffixes)]
+  new_filenames = [split_char.join((new_id, suffix)) for new_id, suffix in zip(new_ids, suffixes)]
   # use os.rename to rename the files using the 'filenames' list and the 'new_filenames' list
   for filename, new_filename in zip(filenames, new_filenames):
     os.rename(filename, new_filename)
