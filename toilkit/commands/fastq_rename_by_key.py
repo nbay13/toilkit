@@ -12,7 +12,8 @@ def rename_by_key(args):
   direc = args.dir
   pattern = args.pattern
   keyname = args.keyname
-
+  # TODO: change to arg
+  split_char = "_R"
   print("Directory: " + direc)
   print("Filename pattern: " + pattern)
   print("Filename key: " + keyname)
@@ -35,11 +36,11 @@ def rename_by_key(args):
   print(d)
   # split the filenames by "_" and save as list
   # filesnames is a list of all the original full file names
-  ids = [filename.split("_")[0] for filename in filenames]
+  ids = [filename.split(split_char)[0] for filename in filenames]
   # access values in the dict based on filename ids and save as list
   # iterate through list of first part of original file names and create new list with the corresponding corrected first part of file names using the key
   new_ids = [d[id] for id in ids]
-  suffixes = ['_'.join(filename.split("_")[1:]) for filename in filenames]
+  suffixes = [split_char.join(filename.split(split_char)[1:]) for filename in filenames]
   # add original filename suffixes to dict values in the list
   new_filenames = ['_'.join((new_id, suffix)) for new_id, suffix in zip(new_ids, suffixes)]
   # use os.rename to rename the files using the 'filenames' list and the 'new_filenames' list
