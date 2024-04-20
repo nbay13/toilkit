@@ -1,4 +1,4 @@
-Preparing inputs to `toil-rnaseq` with `toilkit`
+Processing inputs to and outputs from `toil-rnaseq` with `toilkit`
 ================
 
 ##### Example of RNAseq fastqs fresh from UCLA TCGB core
