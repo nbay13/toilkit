@@ -437,7 +437,7 @@ nbayley
 ```
 
 #### Final notes
-- By default many of the commands will assume the current working directory is the input directory if not provided by a parameter (e.g. --dir or --indir)
+- By default many of the commands will assume the current working directory is the input directory if not provided by a parameter (e.g. \-\-dir or \-\-indir)
 - Many parameters specified here for completeness have reasonable defaults so you don't have to parameterize every command, check the docstrings!
 
 
