@@ -443,5 +443,6 @@ nbayley
 
 # TODO 
 - show examples of mouse read stats summary
+- show example of manifest
 - show examples of QC outputs
 - write full documentation
