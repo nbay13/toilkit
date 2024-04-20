@@ -1,7 +1,7 @@
 Preparing inputs to `toil-rnaseq` with `toilkit`
 ================
 
-#### Example of RNAseq fastqs fresh from UCLA TCGB core
+##### Example of RNAseq fastqs fresh from UCLA TCGB core
 ```
 nbayley
 │   example_sample_key.txt    
@@ -20,7 +20,7 @@ nbayley
     │   24C-003_S6_L002_R2_001.fastq.gz
     └
 ```
-### Merging fastqs
+## Merging fastqs
 `fastq-merge` can merge fastqs from multiple lanes corresponding to the same sample 
 
 While it is important to check for lane-specific biases in sequencing data, many tools require a single fastq file per read orientation (e.g. forward R1 and reverse R2 in paired-end sequencing).
@@ -74,7 +74,7 @@ nbayley
     │   24C-003_R2.fastq.gz
     └
 ```
-### Renaming fastqs
+## Renaming fastqs
 
 `fastq-rename` can rename fastqs based on a **tab-delimited** table of original and new sample names
 
@@ -124,12 +124,241 @@ nbayley
 - This command technically works for any file extension
 - To reverse the sample renaming simply switch the order of columns in your tab-delimited key
 
-TO ADD
-================
+## Mouse read filtering
 
-### (optional) Mouse read filtering
+As part of our pipeline we remove mouse reads from samples taken from mice (either direct or sphere-derived xenografts). To do this we use functions from the [BBTools](https://jgi.doe.gov/data-and-tools/software-tools/bbtools/) package. Sequencing reads are aligned to both mouse and human genomes and reads that uniquely map to mouse are removed, retaining human and ambiguously mapping reads. 
 
-### Preparing `toil-rnaseq` manifests
+##### Example of merged xenograft fastqs
+```
+nbayley
+│   example_sample_key.txt    
+└───raw_fastqs
+└───merged_fastqs
+    │   xenograftA_R1.fastq.gz
+    │   xenograftA_R2.fastq.gz
+    │   xenograftB_R1.fastq.gz
+    │   xenograftB_R2.fastq.gz
+    └
+```
 
-### Handling `toil-rnaseq` outputs
+`bbseal` runs the BBduk (adapter trimming) and Seal (dual alignment) commands and produces separate fastqs for human, mouse, unaligned reads. With the hard-coded Seal paramterization in our pipeline, ambiguously aligning reads are added to both the human and mouse fastq files.
 
+```bash
+# note: currently reference file names are hard-assigned in the source code, 
+# which are v31 human and vM22 mouse gtf files from GENCODE
+toilkit bbseal --bbduk_dir /home/graeberlab/bbmap/ --ref_genome_dir /media/graeberlab/wdgold/nbayley/refs/
+```
+
+##### Output of `bbseal` is a directory per sample with the BBTools Seal output (directory name based on the fastq)
+```
+nbayley
+│   example_sample_key.txt    
+└───raw_fastqs
+└───merged_fastqs
+    │   xenograftA_R1.fastq.gz
+    │   xenograftA_R2.fastq.gz
+    │   xenograftB_R1.fastq.gz
+    │   xenograftB_R2.fastq.gz
+    └───xenograftA
+    │   │    xenograftA_unmapped_1.fq.gz
+    │   │    xenograftA_out.gencode.vM22.transcripts_1.fq.gz
+    │   │    xenograftA_out.gencode.vM22.transcripts_2.fq.gz
+    │   │    xenograftA_out.gencode.v31.transcripts_1.fq.gz
+    │   │    xenograftA_out.gencode.v31.transcripts_2.fq.gz
+    │   └    xenograftA_refstats.txt
+    └───xenograftB
+```
+
+`bbcat` merges the human and ambiguous reads with the unmapped reads into one fastq (per read direction)
+
+```bash
+toilkit bbcat --dir nbayley/merged_fastqs/
+```
+##### `bbcat` adds the \*_human_ambig_umap_reads_R*.fq.gz files for downstream input to `toil-rnaseq`
+
+```
+nbayley
+│   example_sample_key.txt    
+└───raw_fastqs
+└───merged_fastqs
+    │   xenograftA_R1.fastq.gz
+    │   xenograftA_R2.fastq.gz
+    │   xenograftB_R1.fastq.gz
+    │   xenograftB_R2.fastq.gz
+    └───xenograftA
+    │   │   xenograftA_unmapped_1.fq.gz
+    │   │   xenograftA_out.gencode.vM22.transcripts_1.fq.gz
+    │   │   xenograftA_out.gencode.vM22.transcripts_2.fq.gz
+    │   │   xenograftA_out.gencode.v31.transcripts_1.fq.gz
+    │   │   xenograftA_out.gencode.v31.transcripts_2.fq.gz
+    │   │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   └   xenograftA_refstats.txt
+    └───xenograftB
+```
+
+`bbmetrics` collects the sequencing alignment metrics across multiple xenograft sequencing samples
+
+```bash
+# note: if you want spaces in the output filename prefix surround it in quotes
+toilkit bbmetrics --dir nbayley/merged_fastqs/ --outfile "my example"
+```
+
+##### `bbmetrics` creates the *_BBSeal_mouse_read filtering_results.tsv with alignment metrics summary
+
+```
+nbayley
+│   example_sample_key.txt    
+└───raw_fastqs
+└───merged_fastqs
+    │   xenograftA_R1.fastq.gz
+    │   xenograftA_R2.fastq.gz
+    │   xenograftB_R1.fastq.gz
+    │   xenograftB_R2.fastq.gz
+    │   my example_BBSeal_mouse_read_filtering_results.tsv
+    └───xenograftA
+    │   │   xenograftA_unmapped_1.fq.gz
+    │   │   xenograftA_out.gencode.vM22.transcripts_1.fq.gz
+    │   │   xenograftA_out.gencode.vM22.transcripts_2.fq.gz
+    │   │   xenograftA_out.gencode.v31.transcripts_1.fq.gz
+    │   │   xenograftA_out.gencode.v31.transcripts_2.fq.gz
+    │   │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   └   xenograftA_refstats.txt
+    └───xenograftB
+```
+
+## Preparing `toil-rnaseq` manifests
+Once you have prepared the fastqs, move the analysis-ready fastqs to the same directory
+
+```
+nbayley
+│   example_sample_key.txt    
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+    │   patientA_R1.fastq.gz
+    │   patientA_R2.fastq.gz
+    │   patientB_R1.fastq.gz
+    │   patientB_R2.fastq.gz
+    │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   xenograftA_human_ambig_umap_reads_R2.fq.gz
+    │   xenograftB_human_ambig_umap_reads_R1.fq.gz
+    └   xenograftB_human_ambig_umap_reads_R2.fq.gz
+```
+
+`make-manifest` creates a manifest file for input to `toil-rnaseq`
+
+```bash
+# note: this command assumes paired-end sequencing fastqs (R1 and R2)
+toilkit make-manifest --dir /nbayley/ --tdir /nbayley/analysis_fastqs/ --suffix my-example.tsv --starting_num 0
+```
+
+```
+nbayley
+│   example_sample_key.txt
+│   manifest-toil-rnaseq-my-example.tsv
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+    │   patientA_R1.fastq.gz
+    │   patientA_R2.fastq.gz
+    │   patientB_R1.fastq.gz
+    │   patientB_R2.fastq.gz
+    │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   xenograftA_human_ambig_umap_reads_R2.fq.gz
+    │   xenograftB_human_ambig_umap_reads_R1.fq.gz
+    └   xenograftB_human_ambig_umap_reads_R2.fq.gz
+```
+
+`cut-manifest` splits a manifest file based on the desired number of samples per `toil-rnaseq` run
+
+```bash
+# note: files we be ordered alphanumerically and split into groups based on that order
+toilkit cut-manifest --manifest_file manifest-toil-rnaseq-my-example.tsv --split_num 2
+```
+
+```
+nbayley
+│   example_sample_key.txt
+│   manifest-toil-rnaseq-my-example.tsv
+│   manifest-toil-rnaseq-my-example-1.tsv
+│   manifest-toil-rnaseq-my-example-2.tsv
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+    │   patientA_R1.fastq.gz
+    │   patientA_R2.fastq.gz
+    │   patientB_R1.fastq.gz
+    │   patientB_R2.fastq.gz
+    │   xenograftA_human_ambig_umap_reads_R1.fq.gz
+    │   xenograftA_human_ambig_umap_reads_R2.fq.gz
+    │   xenograftB_human_ambig_umap_reads_R1.fq.gz
+    └   xenograftB_human_ambig_umap_reads_R2.fq.gz
+```
+Assuming you have also prepared a config.yaml you are now ready to run `toil-rnaseq run`. See the [documentation](https://github.com/BD2KGenomics/toil-rnaseq/wiki) for instructions on preparing config files and executing commands 
+
+One more thing to do is to create a sample name key for converting UUIDs used by `toil-rnaseq` back to the sample names in the fastq filenames
+
+```bash
+toilkit manifest-key --infile nbayley/manifest-toil-rnaseq-my-example.tsv --outfile nbayley/example_UUID_key.txt
+```
+
+## Handling `toil-rnaseq` outputs
+
+Depending on whether you enabled bamQC in the config.yaml for `toil-rnaseq`, you may have .tar.gz outputs for one or more samples containing the QC and gene expression results with the prefix "FAIL_"
+
+```
+nbayley
+│   example_UUID_key.txt
+│   example_sample_key.txt
+│   manifest-toil-rnaseq-my-example.tsv
+│   manifest-toil-rnaseq-my-example-1.tsv
+│   manifest-toil-rnaseq-my-example-2.tsv
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+└───toil_output
+    │   UUID_0.tar.gz
+    │   UUID_1.tar.gz
+    │   FAIL.UUID_2.tar.gz
+    │   UUID_3.tar.gz
+    │   UUID_0.sortedByCoord.md.bam
+    │   UUID_1.sortedByCoord.md.bam
+    │   UUID_2.sortedByCoord.md.bam
+    └   UUID_3.sortedByCoord.md.bam
+```
+
+`toil-fix` removes the FAIL prefix from outputs (don't worry we will pull out the relevant QC data related to the FAIL prefix later!)
+
+```bash
+toilkit toil-fix --indir nbayley/toil_output/
+```
+
+###### original .tar.gz files are moved into a "renamed" directory within the working directory
+
+```
+nbayley
+│   example_UUID_key.txt
+│   example_sample_key.txt
+│   manifest-toil-rnaseq-my-example.tsv
+│   manifest-toil-rnaseq-my-example-1.tsv
+│   manifest-toil-rnaseq-my-example-2.tsv
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+└───toil_output
+    │   UUID_0.tar.gz
+    │   UUID_1.tar.gz
+    │   UUID_2.tar.gz
+    │   UUID_3.tar.gz
+    │   UUID_0.sortedByCoord.md.bam
+    │   UUID_1.sortedByCoord.md.bam
+    │   UUID_2.sortedByCoord.md.bam
+    │   UUID_3.sortedByCoord.md.bam
+    └───renamed
+        │   FAIL.UUID_3.tar.gz
+        └
+```
+
+`toil-combine` is the primary command for extracting all relevant information from the .tar.gz samples across samples and compiling the data across samples.

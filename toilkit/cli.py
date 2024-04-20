@@ -58,7 +58,7 @@ def main():
     parser_make_manifest.set_defaults(func=make_manifest)
 
     # Add subcommand for manifest_to_anno
-    parser_manifest_to_anno = subparsers.add_parser('manifest-anno')
+    parser_manifest_to_anno = subparsers.add_parser('manifest-key')
     parser_manifest_to_anno.add_argument('--infile', required=True, help='The input manifest file')
     parser_manifest_to_anno.add_argument('--outfile', help='The output annotation file', default = 'idkey.txt')
     parser_manifest_to_anno.set_defaults(func=manifest_to_anno)
