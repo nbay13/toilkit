@@ -119,7 +119,7 @@ nbayley
     │   patientC_R2.fastq.gz
     └
 ```
-##### Notes on file renaming
+#### Notes on file renaming
 - `fastq-rename` assumes that sample names in the filename are separated by "_"
 - This command technically works for any file extension
 - To reverse the sample renaming simply switch the order of columns in your tab-delimited key
@@ -298,9 +298,10 @@ nbayley
 ```
 Assuming you have also prepared a config.yaml you are now ready to run `toil-rnaseq run`. See the [documentation](https://github.com/BD2KGenomics/toil-rnaseq/wiki) for instructions on preparing config files and executing commands 
 
-One more thing to do is to create a sample name key for converting UUIDs used by `toil-rnaseq` back to the sample names in the fastq filenames
+One more thing is to create a sample name key for converting UUIDs used by `toil-rnaseq` back to the sample names in the fastq filenames in the outputted results
 
 ```bash
+# note: use the complete manifest file
 toilkit manifest-key --infile nbayley/manifest-toil-rnaseq-my-example.tsv --outfile nbayley/example_UUID_key.txt
 ```
 
@@ -335,8 +336,7 @@ nbayley
 toilkit toil-fix --indir nbayley/toil_output/
 ```
 
-###### original .tar.gz files are moved into a "renamed" directory within the working directory
-
+##### original .tar.gz files are moved into a *renamed* directory within the working directory
 ```
 nbayley
 │   example_UUID_key.txt
@@ -361,4 +361,82 @@ nbayley
         └
 ```
 
-`toil-combine` is the primary command for extracting all relevant information from the .tar.gz samples across samples and compiling the data across samples.
+`toil-combine` is the primary command for extracting all relevant information from the .tar.gz and compiling the data across samples. By default this command will extract and collate FastQC and STAR alignment results, bamQC results, RSEM gene/isoform expression results, and STAR junction alignment results. Check the docstrings to see how to omit specific results.
+
+
+```bash
+# note: currently this command will output results in the current working directory. Let's assume we are in the directory *../nbayley/*
+toilkit toil-combine --prefix my_example --anno_filename example_UUID_key.txt --indir toil_output/ --star_output junctions/
+```
+
+##### The default command will produce results like this
+```
+nbayley
+│   example_UUID_key.txt
+│   example_sample_key.txt
+│   manifest-toil-rnaseq-my-example.tsv
+│   manifest-toil-rnaseq-my-example-1.tsv
+│   manifest-toil-rnaseq-my-example-2.tsv
+│   my_example_rsem_genes_raw_counts.txt
+│   my_example_rsem_genes_tpm_counts.txt
+│   my_example_rsem_transcripts_hugo_raw_counts.txt
+│   my_example_rsem_transcripts_hugo_tpm_counts.txt
+│   my_example_rsem_transcripts_raw_counts.txt
+│   my_example_rsem_transcripts_raw_counts.txt
+│   my_example_toil-rnaseq_qc_data.txt
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+└───toil_output
+```
+
+The last thing to do is rename the `toil-rnaseq` outputs with UUIDs back to our sample names using `toil-rename`. Currently this command **must** come after `toil-combine` because it expects UUID outputs
+
+```bash
+# note: currently this command operates in the current working directory. Let's assume we `cd` into *../nbayley/toil_output/*
+toilkit toil-rename --infile ../example_UUID_key.txt
+```
+
+If you accidentally rename the output files before `toil-combine` you can easily reverse the renaming
+```bash
+toilkit toil-rename --infile ../example_UUID_key.txt --direction 2
+```
+
+Assuming all went well you now have all the QC, gene expression, and splice junction data extracted from the .tar.gz outputs and output filenames that correspond to biological samples :D
+
+##### Final renamed outputs
+```
+nbayley
+│   example_UUID_key.txt
+│   example_sample_key.txt
+│   manifest-toil-rnaseq-my-example.tsv
+│   manifest-toil-rnaseq-my-example-1.tsv
+│   manifest-toil-rnaseq-my-example-2.tsv
+│   my_example_rsem_genes_raw_counts.txt
+│   my_example_rsem_genes_tpm_counts.txt
+│   my_example_rsem_transcripts_hugo_raw_counts.txt
+│   my_example_rsem_transcripts_hugo_tpm_counts.txt
+│   my_example_rsem_transcripts_raw_counts.txt
+│   my_example_rsem_transcripts_raw_counts.txt
+│   my_example_toil-rnaseq_qc_data.txt
+└───raw_fastqs
+└───merged_fastqs
+└───analysis_fastqs
+└───toil_output
+    │   patientA.tar.gz
+    │   patientB.tar.gz
+    │   xenograftA.tar.gz
+    │   xenograftB.tar.gz
+    │   patientA.sortedByCoord.md.bam
+    │   patientB.sortedByCoord.md.bam
+    │   xenograftA.sortedByCoord.md.bam
+    │   xenograftB.sortedByCoord.md.bam
+    └───renamed
+        │   FAIL.UUID_3.tar.gz
+        └
+```
+
+#### Final notes
+- By default many of the commands will assume the current working directory is the input directory if not provided by a parameter (e.g. --dir or --indir)
+- Many parameters specified here for completeness have reasonable defaults so you don't have to parameterize every command, check the docstrings!
+
