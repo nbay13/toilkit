@@ -149,7 +149,7 @@ nbayley
 toilkit bbseal --bbduk_dir /home/graeberlab/bbmap/ --ref_genome_dir /media/graeberlab/wdgold/nbayley/refs/
 ```
 
-##### Output of `bbseal` is a directory per sample with the BBTools Seal output (directory name based on the fastq)
+##### Output is a directory per sample with the BBTools Seal output (directory name based on the fastq)
 ```
 nbayley
 │   example_sample_key.txt    
@@ -174,7 +174,7 @@ nbayley
 ```bash
 toilkit bbcat --dir nbayley/merged_fastqs/
 ```
-##### `bbcat` adds the \*_human_ambig_umap_reads_R*.fq.gz files for downstream input to `toil-rnaseq`
+##### adds the \*_human_ambig_umap_reads_R*.fq.gz files for downstream analysis
 
 ```
 nbayley
@@ -204,7 +204,7 @@ nbayley
 toilkit bbmetrics --dir nbayley/merged_fastqs/ --outfile "my example"
 ```
 
-##### `bbmetrics` creates the *_BBSeal_mouse_read filtering_results.tsv with alignment metrics summary
+##### creates *_BBSeal_mouse_read filtering_results.tsv with alignment metrics summary
 
 ```
 nbayley
@@ -390,7 +390,7 @@ nbayley
 └───toil_output
 ```
 
-The last thing to do is rename the `toil-rnaseq` outputs with UUIDs back to our sample names using `toil-rename`. Currently this command **must** come after `toil-combine` because it expects UUID outputs
+The last thing to do is rename the `toil-rnaseq` output files with UUIDs back to our sample names using `toil-rename`. Currently this command **must** come after `toil-combine` because it expects UUID outputs
 
 ```bash
 # note: currently this command operates in the current working directory. Let's assume we `cd` into *../nbayley/toil_output/*
@@ -442,7 +442,8 @@ nbayley
 
 
 # TODO 
-- show examples of mouse read stats summary
-- show example of manifest
-- show examples of QC outputs
+- example of mouse read stats summary
+- example of manifest
+- example `toil-rnaseq` command
+- example of QC outputs
 - write full documentation
