@@ -48,7 +48,7 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid: str, results_nam
                 if uuid_num == min_id:
                     gene_lists['genes'] = gene_list
                 print(uuid_num)
-                print(min_ind)
+                print(min_id)
                 print(index)
                 print(gene_lists)
                 update_global_dicts(gene_lists['genes'][index], raw_count, tpm_count, rsem_dict['genes_raw'], rsem_dict['genes_tpm'])
