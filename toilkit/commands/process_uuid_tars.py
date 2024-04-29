@@ -96,7 +96,7 @@ def process_uuid_tars(args):
     anno_dict = map_uuid_to_sample_id()
     toil_ids, folders = check_missing_invalids()
 
-    for uuid in tqdm(desc="Processing Samples: ", unit="samples", iterable=toil_ids):
+    for uuid in tqdm(desc="Processing Samples: ", unit="samples", iterable=sorted(toil_ids)):
         file_name = os.path.join(input_path, f"{uuid}.tar.gz")
         heading = anno_dict[f"{uuid}"]
         targz = open_tar_gz_for_extraction(file_name)
