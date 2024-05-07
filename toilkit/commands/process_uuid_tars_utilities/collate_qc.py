@@ -44,18 +44,22 @@ def prepare_read_fastqc(files, tar: tarfile.TarFile, collate_qc_dict: defaultdic
         with zip.open('R1_fastqc/fastqc_data.txt') as txt:
             byte_content = txt.readlines()
             total_line = byte_content[6].decode('utf-8')            
-            dup_line = byte_content[307].decode('utf-8')
-            collate_qc_dict['total_r1_reads'].append(total_line.rsplit('\t')[1].strip())           
-            collate_qc_dict['dedup_r1_rates'].append(dup_line.rsplit('\t')[1].strip())
+            collate_qc_dict['total_r1_reads'].append(total_line.rsplit('\t')[1].strip())
+            for line in byte_content:
+                if 'Total Deduplicated Percentage' in line.decode('utf-8'):
+                    collate_qc_dict['dedup_r1_rates'].append(line.decode('utf-8').rsplit('\t')[1].strip())
+                    break        
 
     r2_file = tar.extractfile(r2_filename)
     with zipfile.ZipFile(r2_file, 'r') as zip:
         with zip.open('R2_fastqc/fastqc_data.txt') as txt:
             byte_content = txt.readlines()
             total_line = byte_content[6].decode('utf-8')            
-            dup_line = byte_content[307].decode('utf-8')
             collate_qc_dict['total_r2_reads'].append(total_line.rsplit('\t')[1].strip())           
-            collate_qc_dict['dedup_r2_rates'].append(dup_line.rsplit('\t')[1].strip())
+            for line in byte_content:
+                if 'Total Deduplicated Percentage' in line.decode('utf-8'):
+                    collate_qc_dict['dedup_r2_rates'].append(line.decode('utf-8').rsplit('\t')[1].strip())
+                    break
 
     print('...Reading STAR QC data file')    
     star_file = tar.extractfile(star_filename)
