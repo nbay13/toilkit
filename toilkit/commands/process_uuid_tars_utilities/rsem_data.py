@@ -20,7 +20,7 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid: str, results_nam
         gene_list = []
         gene_occurences = {}
         results_file_path = os.path.normpath(os.path.join(f'{uuid}', results_name)).replace('\\', '/')
-        print("\n...Reading ", results_file_path)
+        print("\n...Reading ", results_file_path.split("/")[-1])
         results_file = tar.extractfile(results_file_path)
         results_file.readline()
         
@@ -57,8 +57,6 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid: str, results_nam
                     gene_lists['transcripts'] = gene_list
                 update_global_dicts(gene_lists['transcripts'][index], raw_count, tpm_count, rsem_dict['transcripts_raw'], rsem_dict['transcripts_tpm'])
             index += 1
-
-        print("Completed processing ", results_file_path, "\n")
 
 def add_sample_to_header(sample: str, raw_dict: defaultdict(list), tpm_dict: defaultdict(list)):
     """
