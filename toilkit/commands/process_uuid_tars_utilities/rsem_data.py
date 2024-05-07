@@ -20,7 +20,7 @@ def extract_specific_counts_results(tar: tarfile.TarFile, uuid: str, results_nam
         gene_list = []
         gene_occurences = {}
         results_file_path = os.path.normpath(os.path.join(f'{uuid}', results_name)).replace('\\', '/')
-        print("\n...Reading ", results_file_path.split("/")[-1])
+        print("...Reading", results_file_path.split("/")[-1])
         results_file = tar.extractfile(results_file_path)
         results_file.readline()
         
