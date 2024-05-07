@@ -126,5 +126,5 @@ def write_qc(collate_qc_dict: defaultdict, bamqc: bool, sample_names: list, toil
     path = os.path.join(output_path, prefix + "_toil-rnaseq_qc_data.tsv")
     df = create_qc_dataframe(collate_qc_dict, bamqc, sample_names, toil_ids)
     df.to_csv(path, sep='\t', index=False)
-    print("TOIL QC data written to " + os.path.abspath(path) + '\n')
+    print("TOIL QC data written to " + os.path.abspath(path))
 
