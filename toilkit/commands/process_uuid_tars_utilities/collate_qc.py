@@ -44,18 +44,22 @@ def prepare_read_fastqc(files, tar: tarfile.TarFile, collate_qc_dict: defaultdic
         with zip.open('R1_fastqc/fastqc_data.txt') as txt:
             byte_content = txt.readlines()
             total_line = byte_content[6].decode('utf-8')            
-            dup_line = byte_content[307].decode('utf-8')
-            collate_qc_dict['total_r1_reads'].append(total_line.rsplit('\t')[1].strip())           
-            collate_qc_dict['dedup_r1_rates'].append(dup_line.rsplit('\t')[1].strip())
+            collate_qc_dict['total_r1_reads'].append(total_line.rsplit('\t')[1].strip())
+            for line in byte_content:
+                if 'Total Deduplicated Percentage' in line.decode('utf-8'):
+                    collate_qc_dict['dedup_r1_rates'].append(line.decode('utf-8').rsplit('\t')[1].strip())
+                    break        
 
     r2_file = tar.extractfile(r2_filename)
     with zipfile.ZipFile(r2_file, 'r') as zip:
         with zip.open('R2_fastqc/fastqc_data.txt') as txt:
             byte_content = txt.readlines()
             total_line = byte_content[6].decode('utf-8')            
-            dup_line = byte_content[307].decode('utf-8')
             collate_qc_dict['total_r2_reads'].append(total_line.rsplit('\t')[1].strip())           
-            collate_qc_dict['dedup_r2_rates'].append(dup_line.rsplit('\t')[1].strip())
+            for line in byte_content:
+                if 'Total Deduplicated Percentage' in line.decode('utf-8'):
+                    collate_qc_dict['dedup_r2_rates'].append(line.decode('utf-8').rsplit('\t')[1].strip())
+                    break
 
     print('...Reading STAR QC data file')    
     star_file = tar.extractfile(star_filename)
@@ -118,11 +122,8 @@ def write_qc(collate_qc_dict: defaultdict, bamqc: bool, sample_names: list, toil
     Returns:
     None
     """
-    print("\nArranging final QC data table with proper sample names")
+    print("\nWriting QC data table...")
     path = os.path.join(output_path, prefix + "_toil-rnaseq_qc_data.tsv")
     df = create_qc_dataframe(collate_qc_dict, bamqc, sample_names, toil_ids)
     df.to_csv(path, sep='\t', index=False)
-    print("\nDone! TOIL QC data written to " + os.path.abspath(path) + '\n')
-
-    print("All Done! Renamed SJ.out.tab files can be found at: %s" % (os.path.abspath(output_path)))
 
