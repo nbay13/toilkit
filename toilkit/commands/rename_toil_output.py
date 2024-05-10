@@ -2,6 +2,7 @@ import os
 import tarfile
 import shutil
 import datetime
+from tqdm import tqdm
 
 def rename_toil_output(args):
     input_file = args.infile
