@@ -1,11 +1,12 @@
 import os
 import tarfile
 import shutil
+import datetime
 
 def rename_toil_output(args):
     input_file = args.infile
     direction = args.direction
-    input_dir = os.path.dirname(input_file)
+    input_dir = args.indir
     with open(input_file, 'r', encoding='utf-8') as file:
         header = next(file)
         for line in file:
@@ -22,12 +23,12 @@ def rename_toil_output(args):
             new_tar_gz = os.path.join(input_dir, new + ".tar.gz")
             orig_bam = os.path.join(input_dir, orig + ".sortedByCoord.md.bam")
             new_bam = os.path.join(input_dir, new + ".sortedByCoord.md.bam")
-
+            print("Renaming ", new, "toil-rnaseq outputs...")
             if os.path.exists(orig_tar_gz):
                 rename_tar(orig_tar_gz, new_tar_gz, input_dir, orig, new)
             if os.path.exists(orig_bam):
                 rename_bam(orig_bam, new_bam)
-           
+    tprint("Done!")
 
 
 
@@ -52,3 +53,8 @@ def rename_tar(orig_tar_gz: str, new_tar_gz: str, input_dir: str, orig, new):
 def rename_bam(orig_bam: str, new_bam: str):
     # Rename bam file
     os.rename(orig_bam, new_bam)
+
+def tprint(s):
+    # Python 3
+    time_format = "%a %b %d %H:%M:%S"
+    print('[{}] {}'.format(datetime.datetime.now().strftime(time_format), s))
