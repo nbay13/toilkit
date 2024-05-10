@@ -91,7 +91,7 @@ def main():
     # Add subcommand for rename_toil_output
     parser_rename_toil_output = subparsers.add_parser('toil-rename')
     parser_rename_toil_output.add_argument('--infile', type=str, help='Path to the input txt file')
-    parser_process_uuid_tars.add_argument('--indir', nargs = '?', help='Path to toil-rnaseq results', default = '.')
+    parser_rename_toil_output.add_argument('--indir', nargs = '?', help='Path to toil-rnaseq results', default = '.')
     parser_rename_toil_output.add_argument('--direction', type=int, choices=[1, 2], help='Direction of renaming (1 or 2)', default = 1)
     parser_rename_toil_output.set_defaults(func=rename_toil_output)
 
