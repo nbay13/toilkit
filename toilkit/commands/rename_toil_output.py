@@ -11,7 +11,7 @@ def rename_toil_output(args):
     with open(input_file, 'r', encoding='utf-8') as file:
         header = next(file)
         content = file.readlines()
-        for line in tqdm(content, desc="Processing Samples: ", unit="sample", total = len(contents)):
+        for line in tqdm(content, desc="Processing Samples: ", unit="sample", total = len(content)):
             parts = line.strip().split('\t')
             if len(parts) < 2:
                 continue
