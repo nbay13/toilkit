@@ -9,7 +9,7 @@ def rename_toil_output(args):
     input_dir = args.indir
     with open(input_file, 'r', encoding='utf-8') as file:
         header = next(file)
-        for line in file:
+        for i, line in enumerate(tqdm(desc="Processing Samples: ", unit="sample", file)):
             parts = line.strip().split('\t')
             if len(parts) < 2:
                 continue
@@ -23,7 +23,6 @@ def rename_toil_output(args):
             new_tar_gz = os.path.join(input_dir, new + ".tar.gz")
             orig_bam = os.path.join(input_dir, orig + ".sortedByCoord.md.bam")
             new_bam = os.path.join(input_dir, new + ".sortedByCoord.md.bam")
-            print("Renaming ", new, "toil-rnaseq outputs...")
             if os.path.exists(orig_tar_gz):
                 rename_tar(orig_tar_gz, new_tar_gz, input_dir, orig, new)
             if os.path.exists(orig_bam):
