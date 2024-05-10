@@ -9,7 +9,7 @@ def rename_toil_output(args):
     input_dir = args.indir
     with open(input_file, 'r', encoding='utf-8') as file:
         header = next(file)
-        for i, line in enumerate(tqdm(desc="Processing Samples: ", unit="sample", file)):
+        for i, line in enumerate(tqdm(file, desc="Processing Samples: ", unit="sample")):
             parts = line.strip().split('\t')
             if len(parts) < 2:
                 continue
