@@ -131,6 +131,6 @@ def process_uuid_tars(args):
         write_rsem(os.path.join(input_path,f"{prefix}_rsem_transcripts_tpm_counts.txt"), rsem_dict['transcripts_tpm'])
 
     if not args.omit_collate_qc:
-        write_qc(collate_qc_dict, bamqc, [anno_dict[id] for id in toil_ids], toil_ids, prefix, input_path)
+        write_qc(collate_qc_dict, bamqc, [anno_dict[id] for id in sorted_ids], sorted_ids, prefix, input_path)
 
     print(f"\nDone! Files can be found in {os.path.abspath(input_path)}")
