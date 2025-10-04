@@ -97,20 +97,16 @@ def process_uuid_tars(args):
     toil_ids, folders = check_missing_invalids()
     uuid_nums = [int(toil_id[5:]) for toil_id in toil_ids]
     sorted_ids = [id for _, id in sorted(zip(uuid_nums, toil_ids))]
-    print(sorted_ids)
     for uuid in tqdm(desc="Processing Samples: ", unit="samples", iterable=sorted_ids):
         file_name = os.path.join(input_path, f"{uuid}.tar.gz")
         heading = anno_dict[f"{uuid}"]
         targz = open_tar_gz_for_extraction(file_name)
         files = targz.getnames()
-        print(uuid)
-        print(heading)
         if not args.omit_rsem:
             add_sample_to_header(heading, rsem_dict['genes_raw'], rsem_dict['genes_tpm'])
             add_sample_to_header(heading, rsem_dict['transcripts_hugo_raw'], rsem_dict['transcripts_hugo_tpm'])
             add_sample_to_header(heading, rsem_dict['transcripts_raw'], rsem_dict['transcripts_tpm'])
             # Extract gene and transcript information
-            print(uuid)
             extract_specific_counts_results(targz, uuid, 'RSEM/Hugo/rsem_genes.hugo.results', 'rsem_genes', rsem_dict, gene_lists, min_id)
             extract_specific_counts_results(targz, uuid, 'RSEM/Hugo/rsem_isoforms.hugo.results', 'rsem_transcripts_hugo', rsem_dict, gene_lists, min_id)
             extract_specific_counts_results(targz, uuid, 'RSEM/rsem_isoforms.results', 'rsem_transcripts', rsem_dict, gene_lists, min_id)
