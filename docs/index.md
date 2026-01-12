@@ -305,6 +305,16 @@ One more thing is to create a sample name key for converting UUIDs used by `toil
 toilkit manifest-key --infile nbayley/manifest-toil-rnaseq-my-example.tsv --outfile nbayley/example_UUID_key.txt
 ```
 
+## Running `toil-rnaseq`
+
+You will need to prepare a config file (see toil-rnaseq GitHub wiki) as well as a jobstore directory (example-jobstore) for storing information about the running workflow and a working directory for storing intermediate files produced by the workflow. Once you have all of these things ready you can `toil-rnaseq` as shown below.
+
+```
+sudo toil-rnaseq run /path/tp/example-jobstore --retryCount=2 --config /path/to/config/config-toil-rnaseq.yaml --manifest /path/to/manifest/manifest-toil-rnaseq-my-example.tsv --workDir /path/to/workDir
+```
+
+retryCount allows steps within the workflow to try again if they fail for whatever reason.
+
 ## Handling `toil-rnaseq` outputs
 
 Depending on whether you enabled bamQC in the config.yaml for `toil-rnaseq`, you may have .tar.gz outputs for one or more samples containing the QC and gene expression results with the prefix "FAIL_"
