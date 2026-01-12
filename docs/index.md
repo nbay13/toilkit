@@ -310,7 +310,7 @@ toilkit manifest-key --infile nbayley/manifest-toil-rnaseq-my-example.tsv --outf
 You will need to prepare a config file (see toil-rnaseq GitHub wiki) as well as a jobstore directory (example-jobstore) for storing information about the running workflow and a working directory for storing intermediate files produced by the workflow. Once you have all of these things ready you can `toil-rnaseq` as shown below.
 
 ```
-sudo toil-rnaseq run /path/tp/example-jobstore --retryCount=2 --config /path/to/config/config-toil-rnaseq.yaml --manifest /path/to/manifest/manifest-toil-rnaseq-my-example.tsv --workDir /path/to/workDir
+sudo toil-rnaseq run /path/to/example-jobstore --retryCount=2 --config /path/to/config/config-toil-rnaseq.yaml --manifest /path/to/manifest/manifest-toil-rnaseq-my-example.tsv --workDir /path/to/workDir
 ```
 
 retryCount allows steps within the workflow to try again if they fail for whatever reason.
